@@ -58,20 +58,7 @@ reformat_data_obs_jobs_dict = {
     'precip_accum24hr': {},
     'precip_accum3hr': {},
     'pres_levs': {},
-    'sea_ice': {
-        'DailyAvg_ConcentrationNH': {'env': {'hemisphere': 'nh',
-                                             'grid': 'G219'},
-                                     'commands': [gda_util.metplus_command(
-                                                      'RegridDataPlane_'
-                                                      +'obsOSI-SAF.conf'
-                                                  )]},
-        'DailyAvg_ConcentrationSH': {'env': {'hemisphere': 'sh',
-                                             'grid': 'G220'},
-                                     'commands': [gda_util.metplus_command(
-                                                      'RegridDataPlane_'
-                                                      +'obsOSI-SAF.conf'
-                                                  )]},
-    },
+    'sea_ice': {},
     'snow': {},
     'sst': {},
 }
@@ -136,37 +123,9 @@ reformat_data_model_jobs_dict = {
                                         )]
                                    )]}
     },
-    'sea_ice': {
-        'ConcentrationNH': {'env': {'var1_name': 'ICEC',
-                                    'var1_levels': 'Z0',
-                                    'hemisphere': 'nh',
-                                    'grid': 'G219',
-                                    'met_config_overrides': ''},
-                            'commands': [gda_util.metplus_command(
-                                             'GridStat_fcstGLOBAL_DET_'
-                                              +'NetCDF.conf'
-                                         )]},
-        'ConcentrationSH': {'env': {'var1_name': 'ICEC',
-                                    'var1_levels': 'Z0',
-                                    'hemisphere': 'sh',
-                                    'grid': 'G220',
-                                    'met_config_overrides': ''},
-                            'commands': [gda_util.metplus_command(
-                                             'GridStat_fcstGLOBAL_DET_'
-                                              +'NetCDF.conf'
-                                         )]}
-    },
+    'sea_ice': {},
     'snow': {},
-    'sst': {
-        'SST': {'env': {'var1_name': 'TMP',
-                        'var1_levels': 'Z0',
-                        'grid': 'G004',
-                        'met_config_overrides': ''},
-                'commands': [gda_util.metplus_command(
-                                 'GridStat_fcstGLOBAL_DET_'
-                                 +'NetCDF.conf'
-                             )]}
-    },
+    'sst': {},
 }
 ################################################
 #### assemble_data jobs
@@ -197,12 +156,7 @@ assemble_data_model_jobs_dict = {
                                        'PCPCombine_fcstGLOBAL_DET_precip.conf'
                                    )]}
     },
-    'precip_accum3hr': {
-        '3hrAccum': {'env': {'accum': '3'},
-                      'commands': [gda_util.metplus_command(
-                                       'PCPCombine_fcstGLOBAL_DET_precip.conf'
-                                   )]}
-    },
+    'precip_accum3hr': {},
     'pres_levs': {
         'DailyAvg_GeoHeightAnom': {'env': {'var1_name': 'HGT',
                                            'var1_levels': 'P500',},
@@ -241,146 +195,9 @@ assemble_data_model_jobs_dict = {
                                                      )]
                                                 )]},
     },
-    'sea_ice': {
-        'DailyAvg_ConcentrationNH': {'env': {'hemisphere': 'nh',
-                                             'grid': 'G219',
-                                             'var1_name': 'ICEC',
-                                             'var1_levels': 'Z0',},
-                                     'commands': [gda_util.python_command(
-                                                      'global_det_atmos_'
-                                                      +'stats_grid2grid_'
-                                                      +'create_daily_avg.py',
-                                                      ['ICEC_Z0',
-                                                       os.path.join(
-                                                           '$DATA',
-                                                           '${VERIF_CASE}_'
-                                                           +'${STEP}',
-                                                           'METplus_output',
-                                                           '${RUN}.{valid?'
-                                                           +'fmt=%Y%m%d}',
-                                                           '$MODEL',
-                                                           '$VERIF_CASE',
-                                                           'grid_stat_'
-                                                           +'${VERIF_TYPE}_'
-                                                           +'ConcentrationNH_'
-                                                           +'{lead?fmt=%2H}'
-                                                           +'0000L_'
-                                                           +'{valid?fmt='
-                                                           +'%Y%m%d}_'
-                                                           +'{valid?fmt=%H}'
-                                                           +'0000V_'
-                                                           +'pairs.nc'
-                                                       ),
-                                                       os.path.join(
-                                                           '$COMIN', 'stats',
-                                                           '$COMPONENT',
-                                                           '${RUN}.'
-                                                           +'{valid?'
-                                                           +'fmt=%Y%m%d}',
-                                                           '$MODEL',
-                                                           '$VERIF_CASE',
-                                                           'grid_stat_'
-                                                           +'${VERIF_TYPE}_'
-                                                           +'ConcentrationNH_'
-                                                           +'{lead?fmt=%2H}'
-                                                           +'0000L_'
-                                                           +'{valid?fmt='
-                                                           +'%Y%m%d}_'
-                                                           +'{valid?fmt=%H}'
-                                                           +'0000V_'
-                                                           +'pairs.nc'
-                                                       )])]},
-        'DailyAvg_ConcentrationSH': {'env': {'hemisphere': 'sh',
-                                             'grid': 'G220',
-                                             'var1_name': 'ICEC',
-                                             'var1_levels': 'Z0',},
-                                     'commands': [gda_util.python_command(
-                                                      'global_det_atmos_'
-                                                      +'stats_grid2grid_'
-                                                      +'create_daily_avg.py',
-                                                      ['ICEC_Z0',
-                                                       os.path.join(
-                                                           '$DATA',
-                                                           '${VERIF_CASE}_'
-                                                           +'${STEP}',
-                                                           'METplus_output',
-                                                           '${RUN}.{valid?'
-                                                           +'fmt=%Y%m%d}',
-                                                           '$MODEL',
-                                                           '$VERIF_CASE',
-                                                           'grid_stat_'
-                                                           +'${VERIF_TYPE}_'
-                                                           +'ConcentrationSH_'
-                                                           +'{lead?fmt=%2H}'
-                                                           +'0000L_'
-                                                           +'{valid?fmt='
-                                                           +'%Y%m%d}_'
-                                                           +'{valid?fmt=%H}'
-                                                           +'0000V_'
-                                                           +'pairs.nc'
-                                                       ),
-                                                       os.path.join(
-                                                           '$COMIN', 'stats',
-                                                           '$COMPONENT',
-                                                           '${RUN}.'
-                                                           +'{valid?'
-                                                           +'fmt=%Y%m%d}',
-                                                           '$MODEL',
-                                                           '$VERIF_CASE',
-                                                           'grid_stat_'
-                                                           +'${VERIF_TYPE}_'
-                                                           +'ConcentrationSH_'
-                                                           +'{lead?fmt=%2H}'
-                                                           +'0000L_'
-                                                           +'{valid?fmt='
-                                                           +'%Y%m%d}_'
-                                                           +'{valid?fmt=%H}'
-                                                           +'0000V_'
-                                                           +'pairs.nc'
-                                                       )])]},
-    },
-    'snow': {
-        '24hrAccum_WaterEqv': {'env': {'MODEL_var': 'WEASD'},
-                               'commands': [gda_util.metplus_command(
-                                                'PCPCombine_fcstGLOBAL_'
-                                                +'DET_24hrAccum_snow.conf'
-                                            )]},
-        '24hrAccum_Depth': {'env': {'MODEL_var': 'SNOD'},
-                            'commands': [gda_util.metplus_command(
-                                             'PCPCombine_fcstGLOBAL_'
-                                             +'DET_24hrAccum_snow.conf'
-                                         )]}
-    },
-    'sst': {
-        'DailyAvg_SST': {'env': {'var1_name': 'TMP',
-                                 'var1_levels': 'Z0'},
-                         'commands': [gda_util.python_command(
-                                          'global_det_atmos_'
-                                          +'stats_grid2grid'
-                                          +'_create_daily_avg.py',
-                                          ['TMP_Z0',
-                                           os.path.join(
-                                              '$DATA',
-                                              '${VERIF_CASE}_${STEP}',
-                                              'METplus_output',
-                                              '${RUN}.{valid?fmt=%Y%m%d}',
-                                              '$MODEL', '$VERIF_CASE',
-                                              'grid_stat_${VERIF_TYPE}_SST_'
-                                              +'{lead?fmt=%2H}0000L_'
-                                              +'{valid?fmt=%Y%m%d}_'
-                                              +'{valid?fmt=%H}0000V_pairs.nc'
-                                          ),
-                                          os.path.join(
-                                               '$COMIN', 'stats',
-                                               '$COMPONENT',
-                                               '${RUN}.{valid?fmt=%Y%m%d}',
-                                               '$MODEL', '$VERIF_CASE',
-                                               'grid_stat_${VERIF_TYPE}_SST_'
-                                               +'{lead?fmt=%2H}0000L_'
-                                               +'{valid?fmt=%Y%m%d}_'
-                                               +'{valid?fmt=%H}0000V_pairs.nc'
-                                           )])]}
-    },
+    'sea_ice': {},
+    'snow': {},
+    'sst': {},
 }
 
 ################################################
@@ -389,38 +206,6 @@ assemble_data_model_jobs_dict = {
 generate_stats_jobs_dict = {
     'flux': {},
     'means': {
-        'CAPESfcBased': {'env': {'var1_name': 'CAPE',
-                                 'var1_level': 'Z0',
-                                  'var1_options': ''},
-                         'commands': [gda_util.metplus_command(
-                                          'GridStat_fcstGLOBAL_DET.conf'
-                                      )]},
-        'CloudWater': {'env': {'var1_name': 'CWAT',
-                               'var1_level': 'L0',
-                               'var1_options': ''},
-                       'commands': [gda_util.metplus_command(
-                                        'GridStat_fcstGLOBAL_DET.conf'
-                                    )]},
-        'GeoHeightTropopause': {'env': {'var1_name': 'HGT',
-                                        'var1_level': 'L0',
-                                        'var1_options': ("'GRIB_lvl_typ = 7; "
-                                                         +'set_attr_level = '
-                                                         +'"TROPOPAUSE";'+"'")},
-                                'commands': [gda_util.metplus_command(
-                                                 'GridStat_fcstGLOBAL_DET.conf'
-                                             )]},
-        'PBLHeight': {'env': {'var1_name': 'HPBL',
-                              'var1_level': 'L0',
-                              'var1_options': ''},
-                      'commands': [gda_util.metplus_command(
-                                       'GridStat_fcstGLOBAL_DET.conf'
-                                   )]},
-        'PrecipWater': {'env': {'var1_name': 'PWAT',
-                                'var1_level': 'L0',
-                                'var1_options': ''},
-                        'commands': [gda_util.metplus_command(
-                                         'GridStat_fcstGLOBAL_DET.conf'
-                                     )]},
         'PresSeaLevel': {'env': {'var1_name': 'PRMSL',
                                  'var1_level': 'Z0',
                                  'var1_options': ("'set_attr_units = "
@@ -430,84 +215,18 @@ generate_stats_jobs_dict = {
                          'commands': [gda_util.metplus_command(
                                           'GridStat_fcstGLOBAL_DET.conf'
                                       )]},
-        'PresSfc': {'env': {'var1_name': 'PRES',
-                            'var1_level': 'Z0',
-                            'var1_options': ("'set_attr_units = "
-                                             +'"hPa"; convert(p)=PA_to_HPA(p)'
-                                             +"'")},
-                    'commands': [gda_util.metplus_command(
-                                     'GridStat_fcstGLOBAL_DET.conf'
-                                 )]},
-        'PresTropopause': {'env': {'var1_name': 'PRES',
-                                   'var1_level': 'L0',
-                                   'var1_options': ("'GRIB_lvl_typ = 7; "
-                                                    +'set_attr_level = '
-                                                    +'"TROPOPAUSE";'
-                                                    +'set_attr_units = "hPa"; '
-                                                    +'convert(p)=PA_to_HPA(p)'
-                                                    +"'")},
-                           'commands': [gda_util.metplus_command(
-                                            'GridStat_fcstGLOBAL_DET.conf'
-                                        )]},
-        'RelHum2m': {'env': {'var1_name': 'RH',
-                             'var1_level': 'Z2',
-                             'var1_options': ''},
-                     'commands': [gda_util.metplus_command(
-                                      'GridStat_fcstGLOBAL_DET.conf'
-                                  )]},
-        'SnowWaterEqv': {'env': {'var1_name': 'WEASD',
-                                 'var1_level': 'Z0',
-                                 'var1_options': ("'set_attr_units = "
-                                                  +'"mm";'+"'")},
-                         'commands': [gda_util.metplus_command(
-                                          'GridStat_fcstGLOBAL_DET.conf'
-                                      )]},
-        'SpefHum2m': {'env': {'var1_name': 'SPFH',
-                              'var1_level': 'Z2',
-                              'var1_options': ("'set_attr_units = "
-                                               +'"g/kg"; convert(x)=x*1000'
-                                               +"'")},
-                      'commands': [gda_util.metplus_command(
-                                       'GridStat_fcstGLOBAL_DET.conf'
-                                   )]},
         'Temp2m': {'env': {'var1_name': 'TMP',
                            'var1_level': 'Z2',
                            'var1_options': ''},
                    'commands': [gda_util.metplus_command(
                                     'GridStat_fcstGLOBAL_DET.conf'
                                 )]},
-        'TempTropopause': {'env': {'var1_name': 'TMP',
-                                   'var1_level': 'L0',
-                                   'var1_options': ("'GRIB_lvl_typ = 7; "
-                                                    +'set_attr_level = '
-                                                    +'"TROPOPAUSE";'+"'")},
-                           'commands': [gda_util.metplus_command(
-                                            'GridStat_fcstGLOBAL_DET.conf'
-                                        )]},
-        'TempSoilTopLayer': {'env': {'var1_name': 'TSOIL',
-                                     'var1_level': 'Z0-0.1',
-                                     'var1_options': ''},
-                             'commands': [gda_util.metplus_command(
-                                              'GridStat_fcstGLOBAL_DET.conf'
-                                          )]},
-        'TotalOzone': {'env': {'var1_name': 'TOZNE',
-                               'var1_level': 'L0',
-                               'var1_options': ''},
-                      'commands': [gda_util.metplus_command(
-                                       'GridStat_fcstGLOBAL_DET.conf'
-                                   )]},
         'UWind10m': {'env': {'var1_name': 'UGRD',
                              'var1_level': 'Z10',
                              'var1_options': ''},
                      'commands': [gda_util.metplus_command(
                                       'GridStat_fcstGLOBAL_DET.conf'
                                   )]},
-        'VolSoilMoistTopLayer': {'env': {'var1_name': 'SOILW',
-                                         'var1_level': 'Z0-0.1',
-                                         'var1_options': ''},
-                                 'commands': [gda_util.metplus_command(
-                                                  'GridStat_fcstGLOBAL_DET.conf'
-                                              )]},
         'VWind10m': {'env': {'var1_name': 'VGRD',
                              'var1_level': 'Z10',
                              'var1_options': ''},
@@ -588,63 +307,7 @@ generate_stats_jobs_dict = {
                                              +'obs24hrCCPA_Nbrhd.conf'
                                          )]}
     },
-    'precip_accum3hr': {
-        '3hrCCPA_G212': {'env': {'grid': 'G212',
-                                 'met_config_overrides': ''},
-                         'commands': [gda_util.metplus_command(
-                                          'GridStat_fcstGLOBAL_DET_'
-                                          +'obs3hrCCPA.conf'
-                                      )]},
-        '3hrCCPA_Nbrhd1': {'env': {'nbhrd_list': ("'1,3,5,7,9,11,13,"
-                                                  +"15,17,19'"),
-                                   'met_config_overrides': ''},
-                           'commands': [gda_util.metplus_command(
-                                            'GridStat_fcstGLOBAL_DET_'
-                                            +'obs3hrCCPA_Nbrhd.conf'
-                                        )]},
-        '3hrCCPA_Nbrhd2': {'env': {'nbhrd_list': "'21,23,25,27,29'",
-                                   'met_config_overrides': ''},
-                           'commands': [gda_util.metplus_command(
-                                            'GridStat_fcstGLOBAL_DET_'
-                                            +'obs3hrCCPA_Nbrhd.conf'
-                                        )]},
-        '3hrCCPA_Nbrhd3': {'env': {'nbhrd_list': "'31,33,35,37'",
-                                   'met_config_overrides': ''},
-                           'commands': [gda_util.metplus_command(
-                                            'GridStat_fcstGLOBAL_DET_'
-                                            +'obs3hrCCPA_Nbrhd.conf'
-                                        )]},
-        '3hrCCPA_Nbrhd4': {'env': {'nbhrd_list': "'39,41,43'",
-                                   'met_config_overrides': ''},
-                           'commands': [gda_util.metplus_command(
-                                            'GridStat_fcstGLOBAL_DET_'
-                                            +'obs3hrCCPA_Nbrhd.conf'
-                                        )]},
-        '3hrCCPA_Nbrhd5': {'env': {'nbhrd_list': "'45,47,49'",
-                                   'met_config_overrides': ''},
-                           'commands': [gda_util.metplus_command(
-                                            'GridStat_fcstGLOBAL_DET_'
-                                            +'obs3hrCCPA_Nbrhd.conf'
-                                        )]},
-        '3hrCCPA_Nbrhd6': {'env': {'nbhrd_list': "'51,53,55'",
-                                   'met_config_overrides': ''},
-                           'commands': [gda_util.metplus_command(
-                                            'GridStat_fcstGLOBAL_DET_'
-                                            +'obs3hrCCPA_Nbrhd.conf'
-                                        )]},
-        '3hrCCPA_Nbrhd7': {'env': {'nbhrd_list': "'57,59'",
-                                   'met_config_overrides': ''},
-                           'commands': [gda_util.metplus_command(
-                                            'GridStat_fcstGLOBAL_DET_'
-                                            +'obs3hrCCPA_Nbrhd.conf'
-                                        )]},
-        '3hrCCPA_Nbrhd8': {'env': {'nbhrd_list': "'61,63'",
-                                   'met_config_overrides': ''},
-                           'commands': [gda_util.metplus_command(
-                                            'GridStat_fcstGLOBAL_DET_'
-                                            +'obs3hrCCPA_Nbrhd.conf'
-                                        )]}
-    },
+    'precip_accum3hr': {},
     'pres_levs': {
         'GeoHeight': {'env': {'var1_name': 'HGT',
                               'var1_levels': "'P1000, P700, P500, P250'",
@@ -675,17 +338,6 @@ generate_stats_jobs_dict = {
                                                     +'obsModelAnalysis_DailyAvgAnom'
                                                     +'.conf'
                                                 )]},
-        'Ozone': {'env': {'var1_name': 'O3MR',
-                          'var1_levels': ("'P925, P100, P70, P50, P30, P20, "
-                                          +"P10, P5, P1'"),
-                          'var1_options': ("'set_attr_units = "
-                                           +'"ppm"; convert(x)=x*1000000'
-                                           +"'"),
-                          'met_config_overrides': "'climo_mean = fcst;'"},
-                  'commands': [gda_util.metplus_command(
-                                   'GridStat_fcstGLOBAL_DET_'
-                                   +'obsModelAnalysis_climoERA5.conf'
-                               )]},
         'PresSeaLevel': {'env': {'var1_name': 'PRMSL',
                                  'var1_levels': 'Z0',
                                  'var1_options': ("'set_attr_units = "
@@ -736,226 +388,9 @@ generate_stats_jobs_dict = {
                                        +'obsModelAnalysis_WindShear.conf'
                                    )]}
     },
-    'sea_ice': {
-        'DailyAvg_ConcentrationNH': {'env': {'grid': 'G219',
-                                             'hemisphere': 'nh',
-                                             'vx_mask': 'ARCTIC'},
-                                     'commands': [gda_util.metplus_command(
-                                                     'GridStat_fcstGLOBAL_DET_'
-                                                     +'obsOSI-SAF_DailyAvg.conf'
-                                                  )]},
-        'DailyAvg_ConcentrationSH': {'env': {'grid': 'G220',
-                                             'hemisphere': 'sh',
-                                             'vx_mask': 'ANTARCTIC'},
-                                     'commands': [gda_util.metplus_command(
-                                                     'GridStat_fcstGLOBAL_DET_'
-                                                     +'obsOSI-SAF_DailyAvg.conf'
-                                                  )]},
-        'DailyAvg_ExtentNH': {'env': {'grid': 'G219',
-                                      'hemisphere': 'nh',
-                                      'vx_mask': 'ARCTIC'},
-                              'commands': [gda_util.metplus_command(
-                                               'StatAnalysis_fcstGLOBAL_DET_'
-                                                +'obsOSI-SAF_DailyAvg_Extent_'
-                                                +'MPRtoSL1L2.conf'
-                                           )]},
-        'DailyAvg_ExtentSH': {'env': {'grid': 'G220',
-                                      'hemisphere': 'sh',
-                                      'vx_mask': 'ANTARCTIC'},
-                              'commands': [gda_util.metplus_command(
-                                               'StatAnalysis_fcstGLOBAL_DET_'
-                                                +'obsOSI-SAF_DailyAvg_Extent_'
-                                                +'MPRtoSL1L2.conf'
-                                           )]}
-    },
-    'snow': {
-        '24hrNOHRSC_WaterEqv_G211': {'env': {'grid': 'G211',
-                                             'file_name_var': 'WaterEqv',
-                                             'var1_name': 'WEASD',
-                                             'var1_convert': '0.01'},
-                                     'commands': [gda_util.metplus_command(
-                                                      'GridStat_fcstGLOBAL_DET_'
-                                                      +'obs24hrNOHRSC.conf'
-                                                  )]},
-        '24hrNOHRSC_Depth_G211': {'env': {'grid': 'G211',
-                                          'file_name_var': 'Depth',
-                                          'var1_name': 'SNOD',
-                                          'var1_convert': '1'},
-                                  'commands': [gda_util.metplus_command(
-                                                   'GridStat_fcstGLOBAL_DET_'
-                                                   +'obs24hrNOHRSC.conf'
-                                               )]},
-        '24hrNOHRSC_WaterEqv_G212': {'env': {'grid': 'G212',
-                                             'file_name_var': 'WaterEqv',
-                                             'var1_name': 'WEASD',
-                                             'var1_convert': '0.01'},
-                                     'commands': [gda_util.metplus_command(
-                                                      'GridStat_fcstGLOBAL_DET_'
-                                                      +'obs24hrNOHRSC.conf'
-                                                  )]},
-        '24hrNOHRSC_Depth_G212': {'env': {'grid': 'G212',
-                                          'file_name_var': 'Depth',
-                                          'var1_name': 'SNOD',
-                                          'var1_convert': '1'},
-                                  'commands': [gda_util.metplus_command(
-                                                   'GridStat_fcstGLOBAL_DET_'
-                                                   +'obs24hrNOHRSC.conf'
-                                               )]},
-        '24hrNOHRSC_WaterEqv_G218': {'env': {'grid': 'G218',
-                                             'file_name_var': 'WaterEqv',
-                                             'var1_name': 'WEASD',
-                                             'var1_convert': '0.01'},
-                                     'commands': [gda_util.metplus_command(
-                                                      'GridStat_fcstGLOBAL_DET_'
-                                                      +'obs24hrNOHRSC.conf'
-                                                  )]},
-        '24hrNOHRSC_Depth_G218': {'env': {'grid': 'G218',
-                                          'file_name_var': 'Depth',
-                                          'var1_name': 'SNOD',
-                                          'var1_convert': '1'},
-                                  'commands': [gda_util.metplus_command(
-                                                   'GridStat_fcstGLOBAL_DET_'
-                                                   +'obs24hrNOHRSC.conf'
-                                               )]},
-        '24hrNOHRSC_WaterEqv_Nbrhd1': {'env': {'file_name_var': 'WaterEqv',
-                                               'nbhrd_list': ("'1,3,5,7,9,11,"
-                                                              +"13,15,17,19'"),
-                                               'var1_name': 'WEASD',
-                                               'var1_convert': '0.01'},
-                                       'commands': [gda_util.metplus_command(
-                                                       'GridStat_fcstGLOBAL_DET_'
-                                                       +'obs24hrNOHRSC_Nbrhd.conf'
-                                                   )]},
-        '24hrNOHRSC_WaterEqv_Nbrhd2': {'env': {'file_name_var': 'WaterEqv',
-                                               'nbhrd_list': ("'21,23,25,27,"
-                                                              +"29'"),
-                                               'var1_name': 'WEASD',
-                                               'var1_convert': '0.01'},
-                                       'commands': [gda_util.metplus_command(
-                                                       'GridStat_fcstGLOBAL_DET_'
-                                                       +'obs24hrNOHRSC_Nbrhd.conf'
-                                                   )]},
-        '24hrNOHRSC_WaterEqv_Nbrhd3': {'env': {'file_name_var': 'WaterEqv',
-                                               'nbhrd_list': "'31,33,35,37'",
-                                               'var1_name': 'WEASD',
-                                               'var1_convert': '0.01'},
-                                       'commands': [gda_util.metplus_command(
-                                                       'GridStat_fcstGLOBAL_DET_'
-                                                       +'obs24hrNOHRSC_Nbrhd.conf'
-                                                   )]},
-        '24hrNOHRSC_WaterEqv_Nbrhd4': {'env': {'file_name_var': 'WaterEqv',
-                                               'nbhrd_list': "'39,41,43'",
-                                               'var1_name': 'WEASD',
-                                               'var1_convert': '0.01'},
-                                       'commands': [gda_util.metplus_command(
-                                                       'GridStat_fcstGLOBAL_DET_'
-                                                       +'obs24hrNOHRSC_Nbrhd.conf'
-                                                   )]},
-        '24hrNOHRSC_WaterEqv_Nbrhd5': {'env': {'file_name_var': 'WaterEqv',
-                                               'nbhrd_list': "'45,47,49'",
-                                               'var1_name': 'WEASD',
-                                               'var1_convert': '0.01'},
-                                       'commands': [gda_util.metplus_command(
-                                                       'GridStat_fcstGLOBAL_DET_'
-                                                       +'obs24hrNOHRSC_Nbrhd.conf'
-                                                   )]},
-        '24hrNOHRSC_WaterEqv_Nbrhd6': {'env': {'file_name_var': 'WaterEqv',
-                                               'nbhrd_list': "'51,53,55'",
-                                               'var1_name': 'WEASD',
-                                               'var1_convert': '0.01'},
-                                       'commands': [gda_util.metplus_command(
-                                                       'GridStat_fcstGLOBAL_DET_'
-                                                       +'obs24hrNOHRSC_Nbrhd.conf'
-                                                   )]},
-        '24hrNOHRSC_WaterEqv_Nbrhd7': {'env': {'file_name_var': 'WaterEqv',
-                                               'nbhrd_list': "'57,59'",
-                                               'var1_name': 'WEASD',
-                                               'var1_convert': '0.01'},
-                                       'commands': [gda_util.metplus_command(
-                                                       'GridStat_fcstGLOBAL_DET_'
-                                                       +'obs24hrNOHRSC_Nbrhd.conf'
-                                                   )]},
-        '24hrNOHRSC_WaterEqv_Nbrhd8': {'env': {'file_name_var': 'WaterEqv',
-                                               'nbhrd_list': "'61,63'",
-                                               'var1_name': 'WEASD',
-                                               'var1_convert': '0.01'},
-                                       'commands': [gda_util.metplus_command(
-                                                       'GridStat_fcstGLOBAL_DET_'
-                                                       +'obs24hrNOHRSC_Nbrhd.conf'
-                                                   )]},
-        '24hrNOHRSC_Depth_Nbrhd1': {'env': {'file_name_var': 'Depth',
-                                            'nbhrd_list': ("'1,3,5,7,9,11,13,"
-                                                           +"15,17,19'"),
-                                            'var1_name': 'SNOD',
-                                            'var1_convert': '1'},
-                                    'commands': [gda_util.metplus_command(
-                                                     'GridStat_fcstGLOBAL_DET_'
-                                                     +'obs24hrNOHRSC_Nbrhd.conf'
-                                                 )]},
-        '24hrNOHRSC_Depth_Nbrhd2': {'env': {'file_name_var': 'Depth',
-                                            'nbhrd_list': "'21,23,25,27,29'",
-                                            'var1_name': 'SNOD',
-                                            'var1_convert': '1'},
-                                    'commands': [gda_util.metplus_command(
-                                                     'GridStat_fcstGLOBAL_DET_'
-                                                     +'obs24hrNOHRSC_Nbrhd.conf'
-                                                 )]},
-        '24hrNOHRSC_Depth_Nbrhd3': {'env': {'file_name_var': 'Depth',
-                                            'nbhrd_list': "'31,33,35,37'",
-                                            'var1_name': 'SNOD',
-                                            'var1_convert': '1'},
-                                    'commands': [gda_util.metplus_command(
-                                                     'GridStat_fcstGLOBAL_DET_'
-                                                     +'obs24hrNOHRSC_Nbrhd.conf'
-                                                 )]},
-        '24hrNOHRSC_Depth_Nbrhd4': {'env': {'file_name_var': 'Depth',
-                                            'nbhrd_list': "'39,41,43'",
-                                            'var1_name': 'SNOD',
-                                            'var1_convert': '1'},
-                                    'commands': [gda_util.metplus_command(
-                                                     'GridStat_fcstGLOBAL_DET_'
-                                                     +'obs24hrNOHRSC_Nbrhd.conf'
-                                                 )]},
-        '24hrNOHRSC_Depth_Nbrhd5': {'env': {'file_name_var': 'Depth',
-                                            'nbhrd_list': "'45,47,49'",
-                                            'var1_name': 'SNOD',
-                                            'var1_convert': '1'},
-                                    'commands': [gda_util.metplus_command(
-                                                     'GridStat_fcstGLOBAL_DET_'
-                                                     +'obs24hrNOHRSC_Nbrhd.conf'
-                                                 )]},
-        '24hrNOHRSC_Depth_Nbrhd6': {'env': {'file_name_var': 'Depth',
-                                            'nbhrd_list': "'51,53,55'",
-                                            'var1_name': 'SNOD',
-                                            'var1_convert': '1'},
-                                    'commands': [gda_util.metplus_command(
-                                                     'GridStat_fcstGLOBAL_DET_'
-                                                     +'obs24hrNOHRSC_Nbrhd.conf'
-                                                 )]},
-        '24hrNOHRSC_Depth_Nbrhd7': {'env': {'file_name_var': 'Depth',
-                                            'nbhrd_list': "'57,59'",
-                                            'var1_name': 'SNOD',
-                                            'var1_convert': '1'},
-                                    'commands': [gda_util.metplus_command(
-                                                     'GridStat_fcstGLOBAL_DET_'
-                                                     +'obs24hrNOHRSC_Nbrhd.conf'
-                                                 )]},
-        '24hrNOHRSC_Depth_Nbrhd8': {'env': {'file_name_var': 'Depth',
-                                            'nbhrd_list': "'61,63'",
-                                            'var1_name': 'SNOD',
-                                            'var1_convert': '1'},
-                                    'commands': [gda_util.metplus_command(
-                                                     'GridStat_fcstGLOBAL_DET_'
-                                                     +'obs24hrNOHRSC_Nbrhd.conf'
-                                                 )]},
-    },
-    'sst': {
-        'DailyAvg_SST': {'env': {},
-                         'commands': [gda_util.metplus_command(
-                                          'GridStat_fcstGLOBAL_DET_'
-                                          +'obsGHRSST_OSPO_DailyAvg.conf'
-                                      )]},
-    },
+    'sea_ice': {},
+    'snow': {},
+    'sst': {},
 }
 
 ################################################

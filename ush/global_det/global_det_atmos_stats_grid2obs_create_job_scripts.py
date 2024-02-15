@@ -109,36 +109,7 @@ reformat_data_obs_jobs_dict = {
 }
 reformat_data_model_jobs_dict = {
     'pres_levs': {},
-    'ptype': {
-        'Rain': {'env': {'var1_name': 'CRAIN',
-                         'var1_level': 'L0',
-                         'var1_options': "'GRIB2_pdt = 0'",
-                         'grid': 'G104'},
-                 'commands': [gda_util.metplus_command(
-                                  'RegridDataPlane_fcstGLOBAL_DET.conf'
-                              )]},
-        'Snow': {'env': {'var1_name': 'CSNOW',
-                         'var1_level': 'L0',
-                         'var1_options': "'GRIB2_pdt = 0'",
-                         'grid': 'G104'},
-                 'commands': [gda_util.metplus_command(
-                                  'RegridDataPlane_fcstGLOBAL_DET.conf'
-                              )]},
-        'FrzRain': {'env': {'var1_name': 'CFRZR',
-                            'var1_level': 'L0',
-                            'var1_options': "'GRIB2_pdt = 0'",
-                            'grid': 'G104'},
-                    'commands': [gda_util.metplus_command(
-                                     'RegridDataPlane_fcstGLOBAL_DET.conf'
-                                 )]},
-        'IcePel': {'env': {'var1_name': 'CICEP',
-                           'var1_level': 'L0',
-                           'var1_options': "'GRIB2_pdt = 0'",
-                           'grid': 'G104'},
-                   'commands': [gda_util.metplus_command(
-                                    'RegridDataPlane_fcstGLOBAL_DET.conf'
-                                )]},
-    },
+    'ptype': {},
     'sfc': {}
 }
 
@@ -152,47 +123,7 @@ assemble_data_obs_jobs_dict = {
 }
 assemble_data_model_jobs_dict = {
     'pres_levs': {},
-    'ptype': {
-        'Ptype': {'env': {},
-                  'commands': [
-                      gda_util.python_command(
-                          'global_det_atmos_stats_grid2obs_'
-                          'create_merged_ptype.py',
-                          [os.path.join(
-                               '$DATA', '${VERIF_CASE}_${STEP}',
-                               'METplus_output',
-                               '${RUN}.{valid?fmt=%Y%m%d}',
-                               '$MODEL', '$VERIF_CASE',
-                               'regrid_data_plane_${VERIF_TYPE}_Rain_'
-                               +'init{init?fmt=%Y%m%d%H}_fhr{lead?fmt=%3H}.nc'
-                           ),
-                           os.path.join(
-                               '$DATA', '${VERIF_CASE}_${STEP}',
-                               'METplus_output',
-                               '${RUN}.{valid?fmt=%Y%m%d}',
-                               '$MODEL', '$VERIF_CASE',
-                               'regrid_data_plane_${VERIF_TYPE}_Snow_'
-                               +'init{init?fmt=%Y%m%d%H}_fhr{lead?fmt=%3H}.nc'
-                           ),
-                           os.path.join(
-                               '$DATA', '${VERIF_CASE}_${STEP}',
-                               'METplus_output',
-                               '${RUN}.{valid?fmt=%Y%m%d}',
-                               '$MODEL', '$VERIF_CASE',
-                               'regrid_data_plane_${VERIF_TYPE}_FrzRain_'
-                               +'init{init?fmt=%Y%m%d%H}_fhr{lead?fmt=%3H}.nc'
-                           ),
-                           os.path.join(
-                               '$DATA', '${VERIF_CASE}_${STEP}',
-                               'METplus_output',
-                               '${RUN}.{valid?fmt=%Y%m%d}',
-                               '$MODEL', '$VERIF_CASE',
-                               'regrid_data_plane_${VERIF_TYPE}_IcePel_'
-                               +'init{init?fmt=%Y%m%d%H}_fhr{lead?fmt=%3H}.nc'
-                           )]
-                      )
-                  ]}
-    },
+    'ptype': {},
     'sfc': {
         'TempAnom2m': {'env': {'prepbufr': 'nam',
                                'obs_window': '900',
@@ -260,54 +191,6 @@ generate_stats_jobs_dict = {
                                        'PointStat_fcstGLOBAL_DET_'
                                        +'obsPrepbufr.conf'
                                    )]},
-        'RelHum': {'env': {'prepbufr': 'gdas',
-                           'obs_window': '1800',
-                           'msg_type': "'AIRUPA, ADPUPA, ANYAIR'",
-                           'var1_fcst_name': 'RH',
-                           'var1_fcst_levels': ("'P1000, P925, P850, "
-                                                +"P700, P500, P400, "
-                                                +"P300, P250, P200, "
-                                                +"P150, P100, P50, "
-                                                +"P20, P10, P5, P1'"),
-                           'var1_fcst_options': '',
-                           'var1_obs_name': 'RH',
-                           'var1_obs_levels': ("'P1000, P925, P850, "
-                                               +"P700, P500, P400, "
-                                               +"P300, P250, P200, "
-                                               +"P150, P100, P50, "
-                                               +"P20, P10, P5, P1'"),
-                           'var1_obs_options': '',
-                           'met_config_overrides': ''},
-                   'commands': [gda_util.metplus_command(
-                                    'PointStat_fcstGLOBAL_DET_'
-                                    +'obsPrepbufr.conf'
-                                )]},
-        'SpefHum': {'env': {'prepbufr': 'gdas',
-                            'obs_window': '1800',
-                            'msg_type': "'AIRUPA, ADPUPA, ANYAIR'",
-                            'var1_fcst_name': 'SPFH',
-                            'var1_fcst_levels': ("'P1000, P925, P850, "
-                                                 +"P700, P500, P400, "
-                                                 +"P300, P250, P200, "
-                                                 +"P150, P100, P50, "
-                                                 +"P20, P10, P5, P1'"),
-                            'var1_fcst_options': ("'set_attr_units = "
-                                                  +'"g/kg"; convert(x)=x*1000'
-                                                  +"'"),
-                            'var1_obs_name': 'SPFH',
-                            'var1_obs_levels': ("'P1000, P925, P850, "
-                                                +"P700, P500, P400, "
-                                                +"P300, P250, P200, "
-                                                +"P150, P100, P50, "
-                                                +"P20, P10, P5, P1'"),
-                            'var1_obs_options': ("'set_attr_units = "
-                                                 +'"g/kg"; convert(x)=x*1000'
-                                                 +"'"),
-                            'met_config_overrides': ''},
-                    'commands': [gda_util.metplus_command(
-                                     'PointStat_fcstGLOBAL_DET_'
-                                     +'obsPrepbufr.conf'
-                                 )]},
         'Temp': {'env': {'prepbufr': 'gdas',
                          'obs_window': '1800',
                          'msg_type': "'AIRUPA, ADPUPA, ANYAIR'",
@@ -411,163 +294,8 @@ generate_stats_jobs_dict = {
                                         +'obsPrepbufr_VectorWind.conf'
                                     )]}
     },
-    'ptype': {
-        'Rain': {'env': {'prepbufr': 'nam',
-                         'obs_window': '900',
-                         'msg_type': "'ADPSFC'",
-                         'var1_fcst_name': 'CRAIN',
-                         'var1_fcst_levels': 'L0',
-                         'var1_fcst_options': ("'set_attr_units = "
-                                               +'"unitless"; '
-                                               +'GRIB2_pdt = 0'+"'"),
-                         'var1_fcst_threshs': "'ge1.0'",
-                         'var1_obs_name': 'PRWE',
-                         'var1_obs_levels': 'Z0',
-                         'var1_obs_options': '',
-                         'var1_obs_threshs': "'ge161&&le163'",
-                         'met_config_overrides': ''},
-                 'commands': [gda_util.metplus_command(
-                                  'PointStat_fcstGLOBAL_DET_'
-                                  +'obsPrepbufr_Thresh_Ptype.conf'
-                              )]},
-        'Snow': {'env': {'prepbufr': 'nam',
-                         'obs_window': '900',
-                         'msg_type': "'ADPSFC'",
-                         'var1_fcst_name': 'CSNOW',
-                         'var1_fcst_levels': 'L0',
-                         'var1_fcst_options': ("'set_attr_units = "
-                                               +'"unitless"; '
-                                               +'GRIB2_pdt = 0'+"'"),
-                         'var1_fcst_threshs': "'ge1.0'",
-                         'var1_obs_name': 'PRWE',
-                         'var1_obs_levels': 'Z0',
-                         'var1_obs_options': '',
-                         'var1_obs_threshs': "'ge171&&le173'",
-                         'met_config_overrides': ''},
-                 'commands': [gda_util.metplus_command(
-                                  'PointStat_fcstGLOBAL_DET_'
-                                  +'obsPrepbufr_Thresh_Ptype.conf'
-                              )]},
-        'FrzRain': {'env': {'prepbufr': 'nam',
-                            'obs_window': '900',
-                            'msg_type': "'ADPSFC'",
-                            'var1_fcst_name': 'CFRZR',
-                            'var1_fcst_levels': 'L0',
-                            'var1_fcst_options': ("'set_attr_units = "
-                                                  +'"unitless"; '
-                                                  +'GRIB2_pdt = 0'+"'"),
-                            'var1_fcst_threshs': "'ge1.0'",
-                            'var1_obs_name': 'PRWE',
-                            'var1_obs_levels': 'Z0',
-                            'var1_obs_options': '',
-                            'var1_obs_threshs': "'ge164&&le166'",
-                            'met_config_overrides': ''},
-                    'commands': [gda_util.metplus_command(
-                                     'PointStat_fcstGLOBAL_DET_'
-                                     +'obsPrepbufr_Thresh_Ptype.conf'
-                                 )]},
-        'IcePel': {'env': {'prepbufr': 'nam',
-                           'obs_window': '900',
-                           'msg_type': "'ADPSFC'",
-                           'var1_fcst_name': 'CICEP',
-                           'var1_fcst_levels': 'L0',
-                           'var1_fcst_options': ("'set_attr_units = "
-                                                 +'"unitless";'
-                                                 +'GRIB2_pdt = 0'+"'"),
-                           'var1_fcst_threshs': "'ge1.0'",
-                           'var1_obs_name': 'PRWE',
-                           'var1_obs_levels': 'Z0',
-                           'var1_obs_options': '',
-                           'var1_obs_threshs': "'ge174&&le176'",
-                           'met_config_overrides': ''},
-                   'commands': [gda_util.metplus_command(
-                                    'PointStat_fcstGLOBAL_DET_'
-                                    +'obsPrepbufr_Thresh_Ptype.conf'
-                                )]},
-        'Ptype': {'env': {'prepbufr': 'nam',
-                          'obs_window': '900',
-                          'msg_type': "'ADPSFC'",
-                          'met_config_overrides': ''},
-                  'commands': [gda_util.metplus_command(
-                                   'PointStat_fcstGLOBAL_DET_'
-                                   +'obsPrepbufr_Ptype_MCTC.conf'
-                               )]},
-    },
+    'ptype': {},
     'sfc': {
-        'CAPEMixedLayer': {'env': {'prepbufr': 'gdas',
-                                   'obs_window': '1800',
-                                   'msg_type': "'AIRUPA, ADPUPA, ANYAIR'",
-                                   'var1_fcst_name': 'CAPE',
-                                   'var1_fcst_levels': "'P90-0'",
-                                   'var1_fcst_options': ("'cnt_thresh = "
-                                                         +"[ >0 ];'"),
-                                   'var1_fcst_threshs': ("'ge500, ge1000, "
-                                                         +"ge1500, ge2000, "
-                                                         +"ge3000, ge4000, "
-                                                         +"ge5000'"),
-                                   'var1_obs_name': 'MLCAPE',
-                                   'var1_obs_levels': "'L0-90000'",
-                                   'var1_obs_options': ("'cnt_thresh = "
-                                                        +"[ >0 ]; "
-                                                        +"cnt_logic = "
-                                                        +"UNION;'"),
-                                   'var1_obs_threshs': ("'ge500, ge1000, "
-                                                        +"ge1500, ge2000, "
-                                                        +"ge3000, ge4000, "
-                                                        +"ge5000'"),
-                                   'met_config_overrides': ''},
-                           'commands': [gda_util.metplus_command(
-                                            'PointStat_fcstGLOBAL_DET_'
-                                            +'obsPrepbufr_Thresh.conf'
-                                        )]},
-        'CAPESfcBased': {'env': {'prepbufr': 'gdas',
-                                 'obs_window': '1800',
-                                 'msg_type': "'AIRUPA, ADPUPA, ANYAIR'",
-                                 'var1_fcst_name': 'CAPE',
-                                 'var1_fcst_levels': 'Z0',
-                                 'var1_fcst_options': ("'cnt_thresh = "
-                                                       +"[ >0 ];'"),
-                                 'var1_fcst_threshs': ("'ge500, ge1000, "
-                                                       +"ge1500, ge2000, "
-                                                       +"ge3000, ge4000, "
-                                                       +"ge5000'"),
-                                 'var1_obs_name': 'CAPE',
-                                 'var1_obs_levels': "'L0-100000'",
-                                 'var1_obs_options': ("'cnt_thresh = "
-                                                      +"[ >0 ]; "
-                                                      +"cnt_logic = "
-                                                      +"UNION;'"),
-                                 'var1_obs_threshs': ("'ge500, ge1000, "
-                                                      +"ge1500, ge2000, "
-                                                      +"ge3000, ge4000, "
-                                                      +"ge5000'"),
-                                 'met_config_overrides': ''},
-                         'commands': [gda_util.metplus_command(
-                                          'PointStat_fcstGLOBAL_DET_'
-                                          +'obsPrepbufr_Thresh.conf'
-                                      )]},
-        'Ceiling': {'env': {'prepbufr': 'nam',
-                            'obs_window': '900',
-                            'msg_type': 'ADPSFC',
-                            'var1_fcst_name': 'HGT',
-                            'var1_fcst_levels': 'L0',
-                            'var1_fcst_options': ("'GRIB_lvl_typ = 215;"
-                                                  +"set_attr_level = "
-                                                  +'"CEILING";'+"'"),
-                            'var1_fcst_threshs': ("'lt152, lt305, "
-                                                  +"lt914, ge914, "
-                                                  +"lt1524, lt3048'"),
-                            'var1_obs_name': 'CEILING',
-                            'var1_obs_levels': 'L0',
-                            'var1_obs_options': '',
-                            'var1_obs_threshs': ("'lt152, lt305, "
-                                                 +"lt914, ge914, "
-                                                 +"lt1524, lt3048'"),
-                            'met_config_overrides': ''},
-                    'commands': [gda_util.metplus_command(
-                                     'PointStat_fcstGLOBAL_DET_'
-                                     +'obsPrepbufr_Thresh.conf'
-                                 )]},
         'DailyAvg_TempAnom2m': {'env': {'prepbufr': 'nam',
                                         'obs_window': '900',
                                         'msg_type': 'ADPSFC',
@@ -622,56 +350,6 @@ generate_stats_jobs_dict = {
                                                 +'obsPrepbufr_MPRtoSL1L2.conf'
                                             ),
                                             'fi']},
-        'Dewpoint2m': {'env': {'prepbufr': 'nam',
-                               'obs_window': '900',
-                               'msg_type': 'ADPSFC',
-                               'var1_fcst_name': 'DPT',
-                               'var1_fcst_levels': 'Z2',
-                               'var1_fcst_options': '',
-                               'var1_fcst_threshs': ("'ge277.594, ge283.15, "
-                                                     +"ge288.706, ge294.261'"),
-                               'var1_obs_name': 'DPT',
-                               'var1_obs_levels': 'Z2',
-                               'var1_obs_options': '',
-                               'var1_obs_threshs': ("'ge277.594, ge283.15, "
-                                                    +"ge288.706, ge294.261'"),
-                               'met_config_overrides': ''},
-                       'commands': [gda_util.metplus_command(
-                                        'PointStat_fcstGLOBAL_DET_'
-                                        +'obsPrepbufr_Thresh.conf'
-                                    )]},
-        'PBLHeight': {'env': {'prepbufr': 'gdas',
-                              'obs_window': '1800',
-                              'msg_type': "'AIRUPA, ADPUPA, ANYAIR'",
-                              'var1_fcst_name': 'HPBL',
-                              'var1_fcst_levels': 'L0',
-                              'var1_fcst_options': '',
-                              'var1_fcst_threshs': "'le500, ge2000'",
-                              'var1_obs_name': 'HPBL',
-                              'var1_obs_levels': 'L0',
-                              'var1_obs_options': '',
-                              'var1_obs_threshs': "'le500, ge2000'",
-                              'met_config_overrides': ''},
-                      'commands': [gda_util.metplus_command(
-                                       'PointStat_fcstGLOBAL_DET_'
-                                       +'obsPrepbufr_Thresh.conf'
-                                   )]},
-        'RelHum2m': {'env': {'prepbufr': 'nam',
-                             'obs_window': '900',
-                             'msg_type': 'ADPSFC',
-                             'var1_fcst_name': 'RH',
-                             'var1_fcst_levels': 'Z2',
-                             'var1_fcst_options': '',
-                             'var1_fcst_threshs': "'le15, le20, le25, le30'",
-                             'var1_obs_name': 'RH',
-                             'var1_obs_levels': 'Z2',
-                             'var1_obs_options': '',
-                             'var1_obs_threshs': "'le15, le20, le25, le30'",
-                             'met_config_overrides': ''},
-                     'commands': [gda_util.metplus_command(
-                                      'PointStat_fcstGLOBAL_DET_'
-                                      +'obsPrepbufr_Thresh.conf'
-                                  )]},
         'SeaLevelPres': {'env': {'prepbufr': 'nam',
                                  'obs_window': '900',
                                  'msg_type': 'ADPSFC',
@@ -706,25 +384,6 @@ generate_stats_jobs_dict = {
                                     'PointStat_fcstGLOBAL_DET_'
                                     +'obsPrepbufr.conf'
                                 )]},
-        'TotCloudCover': {'env': {'prepbufr': 'nam',
-                                  'obs_window': '900',
-                                  'msg_type': 'ADPSFC',
-                                  'var1_fcst_name': 'TCDC',
-                                  'var1_fcst_levels': 'L0',
-                                  'var1_fcst_options': ("'GRIB_lvl_typ = 10; "
-                                                        +'GRIB2_pdt = 0; '
-                                                        +'set_attr_level = '
-                                                        +'"TOTAL";'+"'"),
-                                  'var1_fcst_threshs': "'lt10, gt10, gt50, gt90'",
-                                  'var1_obs_name': 'TCDC',
-                                  'var1_obs_levels': 'L0',
-                                  'var1_obs_options': '',
-                                  'var1_obs_threshs': "'lt10, gt10, gt50, gt90'",
-                                  'met_config_overrides': ''},
-                          'commands': [gda_util.metplus_command(
-                                           'PointStat_fcstGLOBAL_DET_'
-                                           +'obsPrepbufr_Thresh.conf'
-                                       )]},
         'UWind10m': {'env': {'prepbufr': 'nam',
                              'obs_window': '900',
                              'msg_type': 'ADPSFC',
@@ -739,29 +398,6 @@ generate_stats_jobs_dict = {
                                       'PointStat_fcstGLOBAL_DET_'
                                        +'obsPrepbufr.conf'
                                   )]},
-        'Visibility': {'env': {'prepbufr': 'nam',
-                               'obs_window': '900',
-                               'msg_type': 'ADPSFC',
-                               'var1_fcst_name': 'VIS',
-                               'var1_fcst_levels': 'Z0',
-                               'var1_fcst_options': ("'censor_thresh = gt16090;"
-                                                     +"censor_val = 16090;'"),
-                               'var1_fcst_threshs': ("'lt805, lt1609, "
-                                                     +"lt4828, lt8045, "
-                                                     +"ge8045, "
-                                                     +"lt16090'"),
-                               'var1_obs_name': 'VIS',
-                               'var1_obs_levels': 'Z0',
-                               'var1_obs_options': '',
-                               'var1_obs_threshs': ("'lt805, lt1609, "
-                                                    +"lt4828, lt8045, "
-                                                    +"ge8045, "
-                                                    +"lt16090'"),
-                               'met_config_overrides': ''},
-                       'commands': [gda_util.metplus_command(
-                                        'PointStat_fcstGLOBAL_DET_'
-                                        +'obsPrepbufr_Thresh.conf'
-                                    )]},
         'VWind10m': {'env': {'prepbufr': 'nam',
                              'obs_window': '900',
                              'msg_type': 'ADPSFC',
@@ -770,20 +406,6 @@ generate_stats_jobs_dict = {
                              'var1_fcst_options': '',
                              'var1_obs_name': 'VGRD',
                              'var1_obs_levels': 'Z10',
-                             'var1_obs_options': '',
-                             'met_config_overrides': ''},
-                     'commands': [gda_util.metplus_command(
-                                      'PointStat_fcstGLOBAL_DET_'
-                                       +'obsPrepbufr.conf'
-                                  )]},
-        'WindGust': {'env': {'prepbufr': 'nam',
-                             'obs_window': '900',
-                             'msg_type': 'ADPSFC',
-                             'var1_fcst_name': 'GUST',
-                             'var1_fcst_levels': 'Z0',
-                             'var1_fcst_options': '',
-                             'var1_obs_name': 'GUST',
-                             'var1_obs_levels': 'Z0',
                              'var1_obs_options': '',
                              'met_config_overrides': ''},
                      'commands': [gda_util.metplus_command(
