@@ -53,42 +53,6 @@ gda_util.make_dir(JOB_GROUP_jobs_dir)
 base_plot_jobs_info_dict = {
     'flux': {},
     'means': {
-        'CAPESfcBased': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS',
-                                      'CONUS', 'N60N90', 'S60S90', 'NAO',
-                                      'SAO', 'NPO', 'SPO'],
-                         'fcst_var_dict': {'name': 'CAPE',
-                                           'levels': ['Z0']},
-                         'obs_var_dict': {'name': 'CAPE',
-                                          'levels': ['Z0']}},
-        'CloudWater': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS',
-                                    'CONUS', 'N60N90', 'S60S90', 'NAO', 'SAO',
-                                    'NPO', 'SPO'],
-                       'fcst_var_dict': {'name': 'CWAT',
-                                         'levels': ['L0']},
-                       'obs_var_dict': {'name': 'CWAT',
-                                        'levels': ['L0']}},
-        'GeoHeightTropopause': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM',
-                                             'TROPICS', 'CONUS', 'N60N90',
-                                             'S60S90', 'NAO', 'SAO', 'NPO',
-                                             'SPO'],
-                                'fcst_var_dict': {'name': 'HGT',
-                                                  'levels': ['TROPOPAUSE']},
-                                'obs_var_dict': {'name': 'HGT',
-                                                 'levels': ['TROPOPAUSE']}},
-        'PBLHeight': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS',
-                                   'CONUS', 'N60N90', 'S60S90', 'NAO', 'SAO',
-                                   'NPO', 'SPO'],
-                      'fcst_var_dict': {'name': 'HPBL',
-                                        'levels': ['L0']},
-                      'obs_var_dict': {'name': 'HPBL',
-                                       'levels': ['L0']}},
-        'PrecipWater': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS',
-                                     'CONUS', 'N60N90', 'S60S90', 'NAO', 'SAO',
-                                     'NPO', 'SPO'],
-                        'fcst_var_dict': {'name': 'PWAT',
-                                          'levels': ['L0']},
-                        'obs_var_dict': {'name': 'PWAT',
-                                         'levels': ['L0']}},
         'PresSeaLevel': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS',
                                       'CONUS', 'N60N90', 'S60S90', 'NAO',
                                       'SAO', 'NPO', 'SPO'],
@@ -96,41 +60,6 @@ base_plot_jobs_info_dict = {
                                            'levels': ['Z0']},
                          'obs_var_dict': {'name': 'PRMSL',
                                           'levels': ['Z0']}},
-        'PresSfc': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS', 'CONUS',
-                                 'N60N90', 'S60S90', 'NAO', 'SAO', 'NPO',
-                                 'SPO'],
-                    'fcst_var_dict': {'name': 'PRES',
-                                      'levels': ['Z0']},
-                    'obs_var_dict': {'name': 'PRES',
-                                     'levels': ['Z0']}},
-        'PresTropopause': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS',
-                                        'CONUS', 'N60N90', 'S60S90', 'NAO',
-                                        'SAO', 'NPO', 'SPO'],
-                           'fcst_var_dict': {'name': 'PRES',
-                                             'levels': ['TROPOPAUSE']},
-                           'obs_var_dict': {'name': 'PRES',
-                                            'levels': ['TROPOPAUSE']}},
-        'RelHum2m': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS', 'CONUS',
-                                  'N60N90', 'S60S90', 'NAO', 'SAO', 'NPO',
-                                  'SPO'],
-                     'fcst_var_dict': {'name': 'RH',
-                                       'levels': ['Z2']},
-                     'obs_var_dict': {'name': 'RH',
-                                      'levels': ['Z2']}},
-        'SnowWaterEqv': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS',
-                                      'CONUS', 'N60N90', 'S60S90', 'NAO',
-                                      'SAO', 'NPO', 'SPO'],
-                         'fcst_var_dict': {'name': 'WEASD',
-                                           'levels': ['Z0']},
-                         'obs_var_dict': {'name': 'WEASD',
-                                          'levels': ['Z0']}},
-        'SpefHum2m': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS',
-                                   'CONUS', 'N60N90', 'S60S90', 'NAO', 'SAO',
-                                   'NPO', 'SPO'],
-                      'fcst_var_dict': {'name': 'SPFH',
-                                        'levels': ['Z2']},
-                      'obs_var_dict': {'name': 'SPFH',
-                                       'levels': ['Z2']}},
         'Temp2m': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS', 'CONUS',
                                 'N60N90', 'S60S90', 'NAO', 'SAO', 'NPO',
                                 'SPO'],
@@ -138,27 +67,6 @@ base_plot_jobs_info_dict = {
                                      'levels': ['Z2']},
                    'obs_var_dict': {'name': 'TMP',
                                     'levels': ['Z2']}},
-        'TempTropopause': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS',
-                                        'CONUS', 'N60N90', 'S60S90', 'NAO',
-                                        'SAO', 'NPO', 'SPO'],
-                           'fcst_var_dict': {'name': 'TMP',
-                                             'levels': ['TROPOPAUSE']},
-                           'obs_var_dict': {'name': 'TMP',
-                                            'levels': ['TROPOPAUSE']}},
-        'TempSoilTopLayer': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS',
-                                          'CONUS', 'N60N90', 'S60S90', 'NAO',
-                                          'SAO', 'NPO', 'SPO'],
-                             'fcst_var_dict': {'name': 'TSOIL',
-                                               'levels': ['Z0.1-0']},
-                             'obs_var_dict': {'name': 'TSOIL',
-                                              'levels': ['Z0.1-0']}},
-        'TotalOzone': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS',
-                                    'CONUS', 'N60N90', 'S60S90', 'NAO', 'SAO',
-                                    'NPO', 'SPO'],
-                       'fcst_var_dict': {'name': 'TOZNE',
-                                         'levels': ['L0']},
-                       'obs_var_dict': {'name': 'TOZNE',
-                                        'levels': ['L0']}},
         'UWind10m': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS', 'CONUS',
                                   'N60N90', 'S60S90', 'NAO', 'SAO', 'NPO',
                                   'SPO'],
@@ -166,14 +74,6 @@ base_plot_jobs_info_dict = {
                                        'levels': ['Z10']},
                      'obs_var_dict': {'name': 'UGRD',
                                       'levels': ['Z10']}},
-        'VolSoilMoistTopLayer': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM',
-                                              'TROPICS', 'CONUS', 'N60N90',
-                                              'S60S90', 'NAO', 'SAO', 'NPO',
-                                              'SPO'],
-                                 'fcst_var_dict': {'name': 'SOILW',
-                                                   'levels': ['Z0.1-0']},
-                                 'obs_var_dict': {'name': 'SOILW',
-                                                  'levels': ['Z0.1-0']}},
         'VWind10m': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS', 'CONUS',
                                   'N60N90', 'S60S90', 'NAO', 'SAO', 'NPO',
                                   'SPO'],
@@ -212,15 +112,6 @@ base_plot_jobs_info_dict = {
                                                      'levels': ['P500']},
                                    'obs_var_dict': {'name': 'HGT_ANOM_DAILYAVG',
                                                     'levels': ['P500']}},
-        'Ozone': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS'],
-                  'fcst_var_dict': {'name': 'O3MR',
-                                    'levels': ['P925', 'P100', 'P70', 'P50',
-                                               'P30', 'P20', 'P10', 'P5',
-                                               'P1']},
-                  'obs_var_dict': {'name': 'O3MR',
-                                   'levels': ['P925', 'P100', 'P70', 'P50',
-                                              'P30', 'P20', 'P10', 'P5',
-                                              'P1']}},
         'PresSeaLevel': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS'],
                          'fcst_var_dict': {'name': 'PRMSL',
                                            'levels': ['Z0']},
@@ -252,57 +143,9 @@ base_plot_jobs_info_dict = {
                       'obs_var_dict': {'name': 'WNDSHR',
                                        'levels': ['P850-P200']}},
     },
-    'sea_ice': {
-        'DailyAvg_ConcentrationNH': {'vx_masks': ['ARCTIC'],
-                                     'fcst_var_dict': {'name': 'ICEC_DAILYAVG',
-                                                       'levels': ['Z0']},
-                                     'obs_var_dict': {'name': 'ice_conc',
-                                                      'levels': ['0,*,*']},
-                                     'obs_name': 'osi_saf'},
-        'DailyAvg_ConcentrationSH': {'vx_masks': ['ANTARCTIC'],
-                                     'fcst_var_dict': {'name': 'ICEC_DAILYAVG',
-                                                       'levels': ['Z0']},
-                                     'obs_var_dict': {'name': 'ice_conc',
-                                                      'levels': ['0,*,*']},
-                                     'obs_name': 'osi_saf'},
-        'DailyAvg_ExtentNH': {'vx_masks': ['ARCTIC'],
-                              'fcst_var_dict': {'name': 'ICEEX_DAILYAVG',
-                                                'levels': ['Z0']},
-                              'obs_var_dict': {'name': 'ICEEX_DAILYAVG',
-                                               'levels': ['Z0']},
-                              'obs_name': 'osi_saf'},
-        'DailyAvg_ExtentSH': {'vx_masks': ['ANTARCTIC'],
-                              'fcst_var_dict': {'name': 'ICEEX_DAILYAVG',
-                                                'levels': ['Z0']},
-                              'obs_var_dict': {'name': 'ICEEX_DAILYAVG',
-                                               'levels': ['Z0']},
-                              'obs_name': 'osi_saf'}
-    },
-    'snow': {
-        '24hrNOHRSC_Depth': {'vx_masks': ['CONUS', 'CONUS_East', 'CONUS_West',
-                                          'CONUS_Central', 'CONUS_South'],
-                             'fcst_var_dict': {'name': 'SNOD_A24',
-                                               'levels': ['Z0']},
-                             'obs_var_dict': {'name': 'ASNOW',
-                                              'levels': ['A24']},
-                             'obs_name': '24hrNOHRSC'},
-        '24hrNOHRSC_WaterEqv': {'vx_masks': ['CONUS', 'CONUS_East',
-                                             'CONUS_West', 'CONUS_Central',
-                                             'CONUS_South'],
-                             'fcst_var_dict': {'name': 'WEASD_A24',
-                                               'levels': ['Z0']},
-                             'obs_var_dict': {'name': 'ASNOW',
-                                              'levels': ['A24']},
-                             'obs_name': '24hrNOHRSC'},
-    },
-    'sst': {
-        'DailyAvg_SST': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS'],
-                         'fcst_var_dict': {'name': 'SST_DAILYAVG',
-                                           'levels': ['Z0']},
-                         'obs_var_dict': {'name': 'analysed_sst',
-                                          'levels': ['0,*,*']},
-                         'obs_name': 'ghrsst_ospo'},
-    }
+    'sea_ice': {},
+    'snow': {},
+    'sst': {}
 }
 
 ################################################
@@ -331,24 +174,6 @@ for pres_levs_job in list(condense_stats_jobs_dict['pres_levs'].keys()):
     condense_stats_jobs_dict['pres_levs'][pres_levs_job]['line_types'] = (
         pres_job_line_types
     )
-#### sea_ice
-for sea_ice_job in list(condense_stats_jobs_dict['sea_ice'].keys()):
-    if 'DailyAvg_Concentration' in sea_ice_job:
-        condense_stats_jobs_dict['sea_ice'][sea_ice_job]['line_types'] = [
-            'SL1L2', 'CTC'
-        ]
-    elif 'DailyAvg_Extent' in sea_ice_job:
-        condense_stats_jobs_dict['sea_ice'][sea_ice_job]['line_types'] = [
-            'SL1L2'
-        ]
-#### snow
-for snow_job in list(condense_stats_jobs_dict['snow'].keys()):
-    condense_stats_jobs_dict['snow'][snow_job]['line_types'] = [
-        'CTC', 'NBRCNT'
-    ]
-#### sst
-for sst_job in list(condense_stats_jobs_dict['sst'].keys()):
-    condense_stats_jobs_dict['sst'][sst_job]['line_types'] = ['SL1L2']
 if JOB_GROUP == 'condense_stats':
     JOB_GROUP_dict = condense_stats_jobs_dict
 
@@ -404,60 +229,6 @@ for pres_levs_job in list(filter_stats_jobs_dict['pres_levs'].keys()):
     filter_stats_jobs_dict['pres_levs'][pres_levs_job]['interps'] = (
         pres_levs_job_interps
     )
-#### sea_ice
-for sea_ice_job in list(condense_stats_jobs_dict['sea_ice'].keys()):
-    filter_stats_jobs_dict['sea_ice'][sea_ice_job]['line_types'] = ['SL1L2']
-    (filter_stats_jobs_dict['sea_ice'][sea_ice_job]['fcst_var_dict']\
-     ['threshs']) = ['NA']
-    (filter_stats_jobs_dict['sea_ice'][sea_ice_job]['obs_var_dict']\
-     ['threshs']) = ['NA']
-    filter_stats_jobs_dict['sea_ice'][sea_ice_job]['interps'] = ['NEAREST/1']
-    if 'NH' in sea_ice_job:
-        filter_stats_jobs_dict['sea_ice'][sea_ice_job]['grid'] = 'G219'
-    elif 'SH' in sea_ice_job:
-        filter_stats_jobs_dict['sea_ice'][sea_ice_job]['grid'] = 'G220'
-for hemisphere in ['NH', 'SH']:
-    (filter_stats_jobs_dict['sea_ice']\
-     ['DailyAvg_Concentration'+hemisphere+'_Thresh']) = copy.deepcopy(
-        filter_stats_jobs_dict['sea_ice']['DailyAvg_Concentration'+hemisphere]
-    )
-    (filter_stats_jobs_dict['sea_ice']\
-     ['DailyAvg_Concentration'+hemisphere+'_Thresh']['line_types']) = ['CTC']
-    (filter_stats_jobs_dict['sea_ice']\
-     ['DailyAvg_Concentration'+hemisphere+'_Thresh']\
-     ['fcst_var_dict']['threshs']) = ['ge15', 'ge40', 'ge80']
-    (filter_stats_jobs_dict['sea_ice']\
-     ['DailyAvg_Concentration'+hemisphere+'_Thresh']\
-     ['obs_var_dict']['threshs']) = ['ge15', 'ge40', 'ge80']
-#### snow
-for snow_job in list(filter_stats_jobs_dict['snow'].keys()):
-    filter_stats_jobs_dict['snow'][snow_job]['line_types'] = ['CTC']
-    filter_stats_jobs_dict['snow'][snow_job]['grid'] = 'G211'
-    filter_stats_jobs_dict['snow'][snow_job]['fcst_var_dict']['threshs'] = [
-        'ge0.0254', 'ge0.0508', 'ge0.1016', 'ge0.2032', 'ge0.3048'
-    ]
-    filter_stats_jobs_dict['snow'][snow_job]['obs_var_dict']['threshs'] = [
-        'ge0.0254', 'ge0.0508', 'ge0.1016', 'ge0.2032', 'ge0.3048'
-    ]
-    filter_stats_jobs_dict['snow'][snow_job]['interps'] = ['NEAREST/1']
-    filter_stats_jobs_dict['snow'][f"{snow_job}_Nbrhd"] = copy.deepcopy(
-        filter_stats_jobs_dict['snow'][snow_job]
-    )
-    filter_stats_jobs_dict['snow'][f"{snow_job}_Nbrhd"]['grid'] = 'G240'
-    filter_stats_jobs_dict['snow'][f"{snow_job}_Nbrhd"]['line_types'] = [
-        'NBRCNT'
-    ]
-    filter_stats_jobs_dict['snow'][f"{snow_job}_Nbrhd"]['interps'] = [
-        'NBRHD_SQUARE/1', 'NBRHD_SQUARE/169', 'NBRHD_SQUARE/529',
-        'NBRHD_SQUARE/1089', 'NBRHD_SQUARE/1849', 'NBRHD_SQUARE/2809',
-        'NBRHD_SQUARE/3969'
-    ]
-#### sst
-for sst_job in list(filter_stats_jobs_dict['sst'].keys()):
-    filter_stats_jobs_dict['sst'][sst_job]['grid'] = 'G004'
-    filter_stats_jobs_dict['sst'][sst_job]['fcst_var_dict']['threshs'] = ['NA']
-    filter_stats_jobs_dict['sst'][sst_job]['obs_var_dict']['threshs'] = ['NA']
-    filter_stats_jobs_dict['sst'][sst_job]['interps'] = ['NEAREST/1']
 if JOB_GROUP == 'filter_stats':
     JOB_GROUP_dict = filter_stats_jobs_dict
 
@@ -510,20 +281,20 @@ make_plots_jobs_dict['precip']['24hrCCPA_PerfDiag']['plots'] = [
     'ge0.1', 'ge0.5', 'ge1', 'ge5', 'ge10', 'ge25', 'ge50', 'ge75'
 ]
 
-make_plots_jobs_dict['precip']['24hrAccumMaps'] = {
-    'vx_masks': ['conus', 'alaska', 'prico', 'hawaii'],
-    'fcst_var_dict': {'name': 'APCP',
-                      'levels': ['A24'],
-                      'threshs': ['NA']},
-    'obs_var_dict': {'name': 'APCP',
-                     'levels': ['A24'],
-                     'threshs': ['NA']},
-    'obs_name': '24hrCCPA',
-    'grid': 'G211',
-    'line_type_stats': ['SL1L2/FBAR'],
-    'interps': ['NEAREST/1'],
-    'plots': ['precip_spatial_map']
-}
+#make_plots_jobs_dict['precip']['24hrAccumMaps'] = {
+#    'vx_masks': ['conus', 'alaska', 'prico', 'hawaii'],
+#    'fcst_var_dict': {'name': 'APCP',
+#                      'levels': ['A24'],
+#                      'threshs': ['NA']},
+#    'obs_var_dict': {'name': 'APCP',
+#                     'levels': ['A24'],
+#                     'threshs': ['NA']},
+#    'obs_name': '24hrCCPA',
+#    'grid': 'G211',
+#    'line_type_stats': ['SL1L2/FBAR'],
+#    'interps': ['NEAREST/1'],
+#    'plots': ['precip_spatial_map']
+#}
 #### pres_levs
 for pres_levs_job in list(make_plots_jobs_dict['pres_levs'].keys()):
     del make_plots_jobs_dict['pres_levs'][pres_levs_job]['line_types']
@@ -563,85 +334,6 @@ for decomp in (make_plots_jobs_dict['pres_levs']\
     (make_plots_jobs_dict['pres_levs']\
      [f"GeoHeight_FourierDecomp{decomp.split('/')[0]}"]['interps']) = [decomp]
 del make_plots_jobs_dict['pres_levs']['GeoHeight_FourierDecomp']
-#### sea_ice
-for sea_ice_job in list(make_plots_jobs_dict['sea_ice'].keys()):
-    del make_plots_jobs_dict['sea_ice'][sea_ice_job]['line_types']
-    if 'DailyAvg_Concentration' in sea_ice_job:
-        if 'Thresh' in sea_ice_job:
-            sea_ice_job_line_type_stats = ['CTC/CSI']
-        else:
-            sea_ice_job_line_type_stats = ['SL1L2/RMSE', 'SL1L2/ME']
-    elif 'DailyAvg_Extent' in sea_ice_job:
-        sea_ice_job_line_type_stats = ['SL1L2/RMSE', 'SL1L2/ME',
-                                       'SL1L2/STDEV_ERR', 'SL1L2/CORR']
-    make_plots_jobs_dict['sea_ice'][sea_ice_job]['line_type_stats'] = (
-        sea_ice_job_line_type_stats
-    )
-    make_plots_jobs_dict['sea_ice'][sea_ice_job]['plots'] = [
-        'time_series', 'lead_average'
-    ]
-for hemisphere in ['NH', 'SH']:
-    (make_plots_jobs_dict['sea_ice']\
-     ['DailyAvg_Concentration'+hemisphere+'_PerfDiag']) = copy.deepcopy(
-         make_plots_jobs_dict['sea_ice']\
-         ['DailyAvg_Concentration'+hemisphere+'_Thresh']
-    )
-    (make_plots_jobs_dict['sea_ice']\
-     ['DailyAvg_Concentration'+hemisphere+'_PerfDiag']['line_type_stats']) = [
-        'CTC/PERFDIAG'
-    ]
-    (make_plots_jobs_dict['sea_ice']\
-     ['DailyAvg_Concentration'+hemisphere+'_PerfDiag']['plots']) = [
-        'performance_diagram'
-    ]
-#### snow
-for snow_job in list(make_plots_jobs_dict['snow'].keys()):
-    del make_plots_jobs_dict['snow'][snow_job]['line_types']
-for snow_var in ['Depth', 'WaterEqv']:
-    (make_plots_jobs_dict['snow'][f"24hrNOHRSC_{snow_var}"]\
-     ['line_type_stats']) = ['CTC/ETS', 'CTC/FBIAS']
-    (make_plots_jobs_dict['snow'][f"24hrNOHRSC_{snow_var}"]\
-     ['plots']) = ['time_series', 'lead_average']
-    for nbrhd in (make_plots_jobs_dict['snow']\
-            [f"24hrNOHRSC_{snow_var}_Nbrhd"]['interps']):
-        (make_plots_jobs_dict['snow']\
-         [f"24hrNOHRSC_{snow_var}_Nbrhd{nbrhd.split('/')[1]}"]) = (
-            copy.deepcopy(make_plots_jobs_dict['snow']\
-            [f"24hrNOHRSC_{snow_var}_Nbrhd"])
-        )
-        (make_plots_jobs_dict['snow']\
-         [f"24hrNOHRSC_{snow_var}_Nbrhd{nbrhd.split('/')[1]}"]\
-         ['line_type_stats']) = ['NBRCNT/FSS']
-        (make_plots_jobs_dict['snow']\
-         [f"24hrNOHRSC_{snow_var}_Nbrhd{nbrhd.split('/')[1]}"]\
-         ['interps']) = [nbrhd]
-        (make_plots_jobs_dict['snow']\
-         [f"24hrNOHRSC_{snow_var}_Nbrhd{nbrhd.split('/')[1]}"]\
-         ['plots']) = ['time_series', 'lead_average']
-    del make_plots_jobs_dict['snow'][f"24hrNOHRSC_{snow_var}_Nbrhd"]
-make_plots_jobs_dict['snow']['24hrNOHRSC_24hrAccumMaps'] = {
-    'vx_masks': ['conus'],
-    'fcst_var_dict': {'name': 'ASNOW',
-                      'levels': ['Z0'],
-                      'threshs': ['NA']},
-    'obs_var_dict': {'name': 'ASNOW',
-                     'levels': ['Z0'],
-                     'threshs': ['NA']},
-    'obs_name': '24hrNOHRSC',
-    'grid': 'G211',
-    'line_type_stats': ['SL1L2/FBAR'],
-    'interps': ['NEAREST/1'],
-    'plots': ['nohrsc_spatial_map']
-}
-#### sst
-for sst_job in list(make_plots_jobs_dict['sst'].keys()):
-    del make_plots_jobs_dict['sst'][sst_job]['line_types']
-    make_plots_jobs_dict['sst'][sst_job]['line_type_stats'] = [
-        'SL1L2/RMSE', 'SL1L2/ME'
-    ]
-    make_plots_jobs_dict['sst'][sst_job]['plots'] = [
-        'time_series', 'lead_average'
-    ]
 if JOB_GROUP == 'make_plots':
     JOB_GROUP_dict = make_plots_jobs_dict
 
@@ -669,24 +361,9 @@ tar_images_jobs_dict = {
                                         f"{VERIF_CASE}_pres_levs",
                                         f"last{NDAYS}days")
     },
-    'sea_ice': {
-        'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
-                                        'plot_output', f"{RUN}.{end_date}",
-                                        f"{VERIF_CASE}_sea_ice",
-                                        f"last{NDAYS}days")
-    },
-    'snow': {
-        'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
-                                        'plot_output', f"{RUN}.{end_date}",
-                                        f"{VERIF_CASE}_snow",
-                                        f"last{NDAYS}days")
-    },
-    'sst': {
-        'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
-                                        'plot_output', f"{RUN}.{end_date}",
-                                        f"{VERIF_CASE}_sst",
-                                        f"last{NDAYS}days")
-    },
+    'sea_ice': {},
+    'snow': {},
+    'sst': {},
 }
 if JOB_GROUP == 'tar_images':
     JOB_GROUP_dict = tar_images_jobs_dict

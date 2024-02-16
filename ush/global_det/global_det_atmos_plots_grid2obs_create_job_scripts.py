@@ -65,30 +65,6 @@ base_plot_jobs_info_dict = {
                                                   'P250', 'P200', 'P100',
                                                   'P50', 'P20', 'P10', 'P5']},
                      'obs_name': 'ADPUPA'},
-        'RelHum': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS', 'CONUS'],
-                   'fcst_var_dict': {'name': 'RH',
-                                     'levels': ['P1000', 'P925', 'P850',
-                                                'P700', 'P500', 'P300', 'P250',
-                                                'P200', 'P100', 'P50', 'P20',
-                                                'P10', 'P5']},
-                   'obs_var_dict': {'name': 'RH',
-                                    'levels': ['P1000', 'P925', 'P850',
-                                               'P700', 'P500', 'P300', 'P250',
-                                               'P200', 'P100', 'P50', 'P20',
-                                               'P10', 'P5']},
-                   'obs_name': 'ADPUPA'},
-        'SpefHum': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS', 'CONUS'],
-                    'fcst_var_dict': {'name': 'SPFH',
-                                      'levels': ['P1000', 'P925', 'P850',
-                                                 'P700', 'P500', 'P300',
-                                                 'P250', 'P200', 'P100',
-                                                 'P50', 'P20', 'P10', 'P5']},
-                    'obs_var_dict': {'name': 'SPFH',
-                                     'levels': ['P1000', 'P925', 'P850',
-                                                'P700', 'P500', 'P300',
-                                                'P250', 'P200', 'P100',
-                                                'P50', 'P20', 'P10', 'P5']},
-                    'obs_name': 'ADPUPA'},
         'Temp': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS', 'CONUS'],
                  'fcst_var_dict': {'name': 'TMP',
                                    'levels': ['P1000', 'P925', 'P850', 'P700',
@@ -140,77 +116,8 @@ base_plot_jobs_info_dict = {
                                                    'P50', 'P20', 'P10', 'P5']},
                        'obs_name': 'ADPUPA'}
     },
-    'ptype': {
-        'Rain': {'vx_masks': ['CONUS', 'CONUS_Central', 'CONUS_East',
-                              'CONUS_South', 'CONUS_West', 'Alaska'],
-                 'fcst_var_dict': {'name': 'CRAIN',
-                                   'levels': ['L0']},
-                 'obs_var_dict': {'name': 'PRWE',
-                                  'levels':['Z0']},
-                 'obs_name': 'ADPSFC'},
-        'Snow': {'vx_masks': ['CONUS', 'CONUS_Central', 'CONUS_East',
-                              'CONUS_South', 'CONUS_West', 'Alaska'],
-                 'fcst_var_dict': {'name': 'CSNOW',
-                                   'levels': ['L0']},
-                 'obs_var_dict': {'name': 'PRWE',
-                                  'levels':['Z0']},
-                 'obs_name': 'ADPSFC'},
-        'FrzRain': {'vx_masks': ['CONUS', 'CONUS_Central', 'CONUS_East',
-                                 'CONUS_South', 'CONUS_West', 'Alaska'],
-                    'fcst_var_dict': {'name': 'CFRZR',
-                                      'levels': ['L0']},
-                    'obs_var_dict': {'name': 'PRWE',
-                                     'levels':['Z0']},
-                    'obs_name': 'ADPSFC'},
-        'IcePel': {'vx_masks': ['CONUS', 'CONUS_Central', 'CONUS_East',
-                                'CONUS_South', 'CONUS_West', 'Alaska'],
-                   'fcst_var_dict': {'name': 'CICEP',
-                                     'levels': ['L0']},
-                   'obs_var_dict': {'name': 'PRWE',
-                                    'levels':['Z0']},
-                   'obs_name': 'ADPSFC'},
-    },
+    'ptype': {},
     'sfc': {
-        'CAPEMixedLayer': {'vx_masks': ['CONUS', 'CONUS_Central', 'CONUS_East',
-                                        'CONUS_South', 'CONUS_West',
-                                        'Appalachia', 'CPlains', 'DeepSouth',
-                                        'GreatBasin', 'GreatLakes',
-                                        'Mezqutial', 'MidAtlantic',
-                                        'NorthAtlantic', 'NPlains', 'NRockies',
-                                        'PacificNW', 'PacificSW', 'Prairie',
-                                        'Southeast', 'Southwest', 'SPlains',
-                                        'SRockies'],
-                           'fcst_var_dict': {'name': 'CAPE',
-                                             'levels': ['P90-0']},
-                           'obs_var_dict': {'name': 'MLCAPE',
-                                            'levels': ['L90000-0']},
-                           'obs_name': 'ADPUPA'},
-        'CAPESfcBased': {'vx_masks': ['CONUS', 'CONUS_Central', 'CONUS_East',
-                                      'CONUS_South', 'CONUS_West',
-                                      'Appalachia', 'CPlains', 'DeepSouth',
-                                      'GreatBasin', 'GreatLakes', 'Mezqutial',
-                                      'MidAtlantic', 'NorthAtlantic',
-                                      'NPlains', 'NRockies', 'PacificNW',
-                                      'PacificSW', 'Prairie', 'Southeast',
-                                      'Southwest', 'SPlains', 'SRockies'],
-                         'fcst_var_dict': {'name': 'CAPE',
-                                           'levels': ['Z0']},
-                         'obs_var_dict': {'name': 'CAPE',
-                                          'levels': ['L100000-0']},
-                         'obs_name': 'ADPUPA'},
-        'Ceiling': {'vx_masks': ['CONUS', 'CONUS_Central', 'CONUS_East',
-                                 'CONUS_South', 'CONUS_West', 'Appalachia',
-                                 'CPlains', 'DeepSouth', 'GreatBasin',
-                                 'GreatLakes', 'Mezqutial', 'MidAtlantic',
-                                 'NorthAtlantic', 'NPlains', 'NRockies',
-                                 'PacificNW', 'PacificSW', 'Prairie',
-                                 'Southeast', 'Southwest', 'SPlains',
-                                 'SRockies'],
-                    'fcst_var_dict': {'name': 'HGT',
-                                      'levels': ['CEILING']},
-                    'obs_var_dict': {'name': 'CEILING',
-                                     'levels': ['L0']},
-                    'obs_name': 'ADPSFC'},
         'DailyAvg_TempAnom2m': {'vx_masks': ['CONUS', 'CONUS_Central',
                                              'CONUS_East', 'CONUS_South',
                                              'CONUS_West', 'Appalachia',
@@ -227,45 +134,6 @@ base_plot_jobs_info_dict = {
                                 'obs_var_dict': {'name': 'TMP_ANOM_DAILYAVG',
                                                  'levels': ['Z2']},
                                 'obs_name': 'ADPSFC'},
-        'Dewpoint2m': {'vx_masks': ['CONUS', 'CONUS_Central', 'CONUS_East',
-                                    'CONUS_South', 'CONUS_West', 'Appalachia',
-                                    'CPlains', 'DeepSouth', 'GreatBasin',
-                                    'GreatLakes', 'Mezqutial', 'MidAtlantic',
-                                    'NorthAtlantic', 'NPlains', 'NRockies',
-                                    'PacificNW', 'PacificSW', 'Prairie',
-                                    'Southeast', 'Southwest', 'SPlains',
-                                    'SRockies'],
-                       'fcst_var_dict': {'name': 'DPT',
-                                         'levels': ['Z2']},
-                       'obs_var_dict': {'name': 'DPT',
-                                        'levels': ['Z2']},
-                       'obs_name': 'ADPSFC'},
-        'PBLHeight': {'vx_masks': ['CONUS', 'CONUS_Central', 'CONUS_East',
-                                   'CONUS_South', 'CONUS_West', 'Appalachia',
-                                   'CPlains', 'DeepSouth', 'GreatBasin',
-                                   'GreatLakes', 'Mezqutial', 'MidAtlantic',
-                                   'NorthAtlantic', 'NPlains', 'NRockies',
-                                   'PacificNW', 'PacificSW', 'Prairie',
-                                   'Southeast', 'Southwest', 'SPlains',
-                                   'SRockies'],
-                      'fcst_var_dict': {'name': 'HPBL',
-                                        'levels': ['L0']},
-                      'obs_var_dict': {'name': 'HPBL',
-                                       'levels': ['L0']},
-                      'obs_name': 'ADPUPA'},
-        'RelHum2m': {'vx_masks': ['CONUS', 'CONUS_Central', 'CONUS_East',
-                                  'CONUS_South', 'CONUS_West', 'Appalachia',
-                                  'CPlains', 'DeepSouth', 'GreatBasin',
-                                  'GreatLakes', 'Mezqutial', 'MidAtlantic',
-                                  'NorthAtlantic', 'NPlains', 'NRockies',
-                                  'PacificNW', 'PacificSW', 'Prairie',
-                                  'Southeast', 'Southwest', 'SPlains',
-                                  'SRockies'],
-                     'fcst_var_dict': {'name': 'RH',
-                                       'levels': ['Z2']},
-                     'obs_var_dict': {'name': 'RH',
-                                      'levels': ['Z2']},
-                     'obs_name': 'ADPSFC'},
         'SeaLevelPres': {'vx_masks': ['CONUS', 'CONUS_Central', 'CONUS_East',
                                       'CONUS_South', 'CONUS_West',
                                       'Appalachia', 'CPlains', 'DeepSouth',
@@ -292,19 +160,6 @@ base_plot_jobs_info_dict = {
                    'obs_var_dict': {'name': 'TMP',
                                     'levels': ['Z2']},
                    'obs_name': 'ADPSFC'},
-        'TotCloudCover': {'vx_masks': ['CONUS', 'CONUS_Central', 'CONUS_East',
-                                       'CONUS_South', 'CONUS_West',
-                                       'Appalachia', 'CPlains', 'DeepSouth',
-                                       'GreatBasin', 'GreatLakes', 'Mezqutial',
-                                       'MidAtlantic', 'NorthAtlantic',
-                                       'NPlains', 'NRockies', 'PacificNW',
-                                       'PacificSW', 'Prairie', 'Southeast',
-                                       'Southwest', 'SPlains', 'SRockies'],
-                          'fcst_var_dict': {'name': 'TCDC',
-                                            'levels': ['TOTAL']},
-                          'obs_var_dict': {'name': 'TCDC',
-                                           'levels': ['L0']},
-                          'obs_name': 'ADPSFC'},
         'UWind10m': {'vx_masks': ['CONUS', 'CONUS_Central', 'CONUS_East',
                                   'CONUS_South', 'CONUS_West', 'Appalachia',
                                   'CPlains', 'DeepSouth', 'GreatBasin',
@@ -318,19 +173,6 @@ base_plot_jobs_info_dict = {
                      'obs_var_dict': {'name': 'UGRD',
                                       'levels': ['Z10']},
                      'obs_name': 'ADPSFC'},
-        'Visibility': {'vx_masks': ['CONUS', 'CONUS_Central', 'CONUS_East',
-                                    'CONUS_South', 'CONUS_West', 'Appalachia',
-                                    'CPlains', 'DeepSouth', 'GreatBasin',
-                                    'GreatLakes', 'Mezqutial', 'MidAtlantic',
-                                    'NorthAtlantic', 'NPlains', 'NRockies',
-                                    'PacificNW', 'PacificSW', 'Prairie',
-                                    'Southeast', 'Southwest', 'SPlains',
-                                    'SRockies'],
-                       'fcst_var_dict': {'name': 'VIS',
-                                         'levels': ['Z0']},
-                       'obs_var_dict': {'name': 'VIS',
-                                        'levels': ['Z0']},
-                       'obs_name': 'ADPSFC'},
         'VWind10m': {'vx_masks': ['CONUS', 'CONUS_Central', 'CONUS_East',
                                   'CONUS_South', 'CONUS_West', 'Appalachia',
                                   'CPlains', 'DeepSouth', 'GreatBasin',
@@ -343,19 +185,6 @@ base_plot_jobs_info_dict = {
                                        'levels': ['Z10']},
                      'obs_var_dict': {'name': 'VGRD',
                                       'levels': ['Z10']},
-                     'obs_name': 'ADPSFC'},
-        'WindGust': {'vx_masks': ['CONUS', 'CONUS_Central', 'CONUS_East',
-                                  'CONUS_South', 'CONUS_West', 'Appalachia',
-                                  'CPlains', 'DeepSouth', 'GreatBasin',
-                                  'GreatLakes', 'Mezqutial', 'MidAtlantic',
-                                  'NorthAtlantic', 'NPlains', 'NRockies',
-                                  'PacificNW', 'PacificSW', 'Prairie',
-                                  'Southeast', 'Southwest', 'SPlains',
-                                  'SRockies'],
-                     'fcst_var_dict': {'name': 'GUST',
-                                       'levels': ['Z0']},
-                     'obs_var_dict': {'name': 'GUST',
-                                      'levels': ['Z0']},
                      'obs_name': 'ADPSFC'},
         'VectorWind10m': {'vx_masks': ['CONUS', 'CONUS_Central', 'CONUS_East',
                                        'CONUS_South', 'CONUS_West',
@@ -386,9 +215,6 @@ for pres_levs_job in list(condense_stats_jobs_dict['pres_levs'].keys()):
     condense_stats_jobs_dict['pres_levs'][pres_levs_job]['line_types'] = (
         pres_levs_job_line_types
     )
-#### ptype
-for ptype_job in list(condense_stats_jobs_dict['ptype'].keys()):
-    condense_stats_jobs_dict['ptype'][ptype_job]['line_types'] = ['CTC']
 #### sfc
 for sfc_job in list(condense_stats_jobs_dict['sfc'].keys()):
     if sfc_job == 'VectorWind10m':
@@ -417,24 +243,6 @@ for pres_levs_job in list(filter_stats_jobs_dict['pres_levs'].keys()):
     filter_stats_jobs_dict['pres_levs'][pres_levs_job]['interps'] = [
         'BILIN/4'
     ]
-#### ptype
-for ptype_job in list(filter_stats_jobs_dict['ptype'].keys()):
-    filter_stats_jobs_dict['ptype'][ptype_job]['grid'] = 'G104'
-    filter_stats_jobs_dict['ptype'][ptype_job]['interps'] = ['NEAREST/1']
-    filter_stats_jobs_dict['ptype'][ptype_job]['fcst_var_dict']['threshs'] = [
-        'ge1.0'
-    ]
-    if ptype_job == 'Rain':
-        ptype_job_obs_threshs = ['ge161&&le163']
-    elif ptype_job == 'Snow':
-        ptype_job_obs_threshs = ['ge171&&le173']
-    elif ptype_job == 'FrzRain':
-        ptype_job_obs_threshs = ['ge164&&le166']
-    elif ptype_job == 'IcePel':
-        ptype_job_obs_threshs = ['ge174&&le176']
-    filter_stats_jobs_dict['ptype'][ptype_job]['obs_var_dict']['threshs'] = (
-        ptype_job_obs_threshs
-    )
 #### sfc
 for sfc_job in list(filter_stats_jobs_dict['sfc'].keys()):
     filter_stats_jobs_dict['sfc'][sfc_job]['grid'] = 'G104'
@@ -513,13 +321,6 @@ for pres_levs_job in list(make_plots_jobs_dict['pres_levs'].keys()):
     make_plots_jobs_dict['pres_levs'][pres_levs_job]['plots'] = [
         'time_series', 'lead_average', 'stat_by_level', 'lead_by_level'
     ]
-#### ptype
-for ptype_job in list(make_plots_jobs_dict['ptype'].keys()):
-    del make_plots_jobs_dict['ptype'][ptype_job]['line_types']
-    make_plots_jobs_dict['ptype'][ptype_job]['line_type_stats'] = ['CTC/FBIAS']
-    make_plots_jobs_dict['ptype'][ptype_job]['plots'] = [
-        'time_series', 'lead_average'
-    ]
 #### sfc
 for sfc_job in list(make_plots_jobs_dict['sfc'].keys()):
     del make_plots_jobs_dict['sfc'][sfc_job]['line_types']
@@ -558,15 +359,6 @@ for sfc_job in list(make_plots_jobs_dict['sfc'].keys()):
         sfc_job_line_type_stats
     )
     make_plots_jobs_dict['sfc'][sfc_job]['plots'] = sfc_job_plots
-for cape_level in ['MixedLayer', 'SfcBased']:
-    make_plots_jobs_dict['sfc'][f"CAPE{cape_level}_PerfDiag"] = copy.deepcopy(
-        make_plots_jobs_dict['sfc'][f"CAPE{cape_level}_Thresh"]
-    )
-    (make_plots_jobs_dict['sfc'][f"CAPE{cape_level}_PerfDiag"]\
-     ['line_type_stats']) = ['CTC/PERFDIAG']
-    make_plots_jobs_dict['sfc'][f"CAPE{cape_level}_PerfDiag"]['plots'] = [
-        'performance_diagram'
-    ]
 if JOB_GROUP == 'make_plots':
     JOB_GROUP_dict = make_plots_jobs_dict
 
@@ -580,12 +372,7 @@ tar_images_jobs_dict = {
                                         f"{VERIF_CASE}_pres_levs",
                                         f"last{NDAYS}days")
     },
-    'ptype': {
-        'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
-                                        'plot_output', f"{RUN}.{end_date}",
-                                        f"{VERIF_CASE}_ptype",
-                                        f"last{NDAYS}days")
-    },
+    'ptype': {},
     'sfc': {
         'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
                                         'plot_output', f"{RUN}.{end_date}",
