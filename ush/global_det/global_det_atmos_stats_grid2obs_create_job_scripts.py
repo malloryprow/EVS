@@ -191,6 +191,32 @@ generate_stats_jobs_dict = {
                                        'PointStat_fcstGLOBAL_DET_'
                                        +'obsPrepbufr.conf'
                                    )]},
+        'SpefHum': {'env': {'prepbufr': 'gdas',
+                            'obs_window': '1800',
+                            'msg_type': "'AIRUPA, ADPUPA, ANYAIR'",
+                            'var1_fcst_name': 'SPFH',
+                            'var1_fcst_levels': ("'P1000, P925, P850, "
+                                                 +"P700, P500, P400, "
+                                                 +"P300, P250, P200, "
+                                                 +"P150, P100, P50, "
+                                                 +"P20, P10, P5, P1'"),
+                            'var1_fcst_options': ("'set_attr_units = "
+                                                  +'"g/kg"; convert(x)=x*1000'
+                                                  +"'"),
+                            'var1_obs_name': 'SPFH',
+                            'var1_obs_levels': ("'P1000, P925, P850, "
+                                                +"P700, P500, P400, "
+                                                +"P300, P250, P200, "
+                                                +"P150, P100, P50, "
+                                                +"P20, P10, P5, P1'"),
+                            'var1_obs_options': ("'set_attr_units = "
+                                                 +'"g/kg"; convert(x)=x*1000'
+                                                 +"'"),
+                            'met_config_overrides': ''},
+                    'commands': [gda_util.metplus_command(
+                                     'PointStat_fcstGLOBAL_DET_'
+                                     +'obsPrepbufr.conf'
+                                 )]},
         'Temp': {'env': {'prepbufr': 'gdas',
                          'obs_window': '1800',
                          'msg_type': "'AIRUPA, ADPUPA, ANYAIR'",
