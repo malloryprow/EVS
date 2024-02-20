@@ -654,14 +654,6 @@ for verif_type in VERIF_CASE_STEP_type_list:
                                        job_env_dict['COMOUTjob']]:
                         gda_util.make_dir(output_dir)
                     run_global_det_atmos_plots = ['global_det_atmos_plots.py']
-                    if evs_run_mode == 'production' and \
-                            verif_type in ['pres_levs', 'sfc'] and \
-                            job_env_dict['plot'] in \
-                            ['lead_average', 'lead_by_level',
-                             'lead_by_date']:
-                        run_global_det_atmos_plots.append(
-                            'global_det_atmos_plots_production_tof240.py'
-                        )
                     for run_global_det_atmos_plot in run_global_det_atmos_plots:
                         # Create job file
                         njobs+=1
