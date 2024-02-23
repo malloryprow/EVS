@@ -58,7 +58,7 @@ if [ $RUN_GRID2OBS_PLOTS = YES ]; then
     #    g2op_*_fhr_inc: frequency to verify forecast hours: at HH[H]
     export g2op_model_plot_name_list="gfs graphcastgfs13 graphcastgfs37"
     export g2op_type_list="sfc"
-    export g2op_event_equalization="YES"
+    export g2op_event_equalization="NO"
     export g2op_sfc_init_hr_list="00 06 12 18"
     export g2op_sfc_valid_hr_list="00 06 12 18"
     export g2op_sfc_fhr_list="6 12 18 24 30 36 42 48 54 60 66 72 96 120 144 168 192 216 240"
