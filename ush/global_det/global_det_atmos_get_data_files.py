@@ -460,9 +460,8 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                     )
                     osi_saf_hem_arch_file_format = os.path.join(
                         archive_obs_data_dir, 'osi_saf',
-                        'osi_saf.multi.'+hem+'.'
-                        +'{valid_shift?fmt=%Y%m%d%H?shift=-24}to'
-                        +'{valid?fmt=%Y%m%d%H}.nc'
+                        'ice_conc_'+hem+'_polstere-100_multi_'
+                        +'{valid_shift?fmt=%Y%m%d%H?shift=-12}00.nc'
                     )
                     osi_saf_hem_dest_file_format = os.path.join(
                         VERIF_CASE_STEP_osi_saf_dir,
@@ -510,8 +509,7 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                 )
                 ghrsst_ospo_arch_file_format = os.path.join(
                     archive_obs_data_dir, 'ghrsst_ospo',
-                    'ghrsst_ospo.{valid_shift?fmt=%Y%m%d%H?shift=-24}to'
-                    +'{valid?fmt=%Y%m%d%H}.nc'
+                    '{valid_shift?fmt=%Y%m%d?shift=-24}_OSPO_L4_GHRSST.nc'
                 )
                 VERIF_CASE_STEP_ghrsst_ospo_dir = os.path.join(
                     VERIF_CASE_STEP_data_dir, 'ghrsst_ospo'

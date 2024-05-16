@@ -1076,27 +1076,39 @@ def get_truth_file(valid_time_dt, obs, source_prod_file_format,
     dest_file = format_filler(dest_file_format, valid_time_dt,
                               valid_time_dt, ['anl'], {})
     log_missing_dir = dest_file.rpartition('/')[0].rpartition('/')[0]
-    source_loc_list = ['prod']
-    if evs_run_mode != 'production':
-        source_loc_list.append('arch')
-    for source_loc in source_loc_list:
-        if source_loc == 'prod':
-            source_file_format = source_prod_file_format
-        elif source_loc == 'arch':
-            source_file_format = source_arch_file_format
-        log_missing_file = os.path.join(log_missing_dir, 'mail_missing_'
-                                        +source_loc+'_'
-                                        +dest_file.rpartition('/')[2]\
-                                        .replace('.', '_')+'.sh')
-        source_file = format_filler(source_file_format, valid_time_dt,
-                                    valid_time_dt, ['anl'], {})
-        if not os.path.exists(dest_file):
-            if check_file_exists_size(source_file):
+    if evs_run_mode == 'production':
+        source_loc = 'prod'
+        source_file_format = source_prod_file_format
+    else:
+        source_loc = 'arch'
+        source_file_format = source_arch_file_format
+    log_missing_file = os.path.join(log_missing_dir, 'mail_missing_'
+                                    +source_loc+'_'
+                                    +dest_file.rpartition('/')[2]\
+                                    .replace('.', '_')+'.sh')
+    source_file = format_filler(source_file_format, valid_time_dt,
+                                valid_time_dt, ['anl'], {})
+    if not os.path.exists(dest_file):
+        if check_file_exists_size(source_file):
+            if source_loc == 'arch' and obs == 'GHRSST OSPO':
+                print(f"Prepping {source_file}")
+                prep_prod_ghrsst_ospo_file(
+                    source_file, dest_file, valid_time_dt,
+                    log_missing_file
+                )
+            elif source_loc == 'arch' and obs in ['OSI-SAF NH',
+                                                  'OSI-SAF SH']:
+                print(f"Prepping {source_file}")
+                prep_prod_osi_saf_file(
+                    source_file, dest_file, valid_time_dt,
+                    log_missing_file
+                )
+            else:
                 print("Linking "+source_file+" to "+dest_file)
                 os.symlink(source_file, dest_file)
-            else:
-                log_missing_file_truth(log_missing_file, source_file,
-                                       obs, valid_time_dt)
+        else:
+            log_missing_file_truth(log_missing_file, source_file,
+                                   obs, valid_time_dt)
 
 def check_model_files(job_dict):
     """! Check what model files or don't exist
