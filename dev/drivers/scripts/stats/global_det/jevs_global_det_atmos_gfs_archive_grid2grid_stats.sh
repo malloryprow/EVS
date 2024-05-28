@@ -62,8 +62,6 @@ export COMINgfs=/lfs/h2/emc/vpppg/noscrub/mallory.row/verification/global/verify
 export COMINobsproc=/lfs/h1/ops/prod/com/obsproc/$obsproc_ver
 export COMINccpa=/lfs/h1/ops/prod/com/ccpa/$ccpa_ver
 
-export VDATE=20240514
-
 # CALL executable job script here
 $HOMEevs/jobs/JEVS_GLOBAL_DET_STATS
 
