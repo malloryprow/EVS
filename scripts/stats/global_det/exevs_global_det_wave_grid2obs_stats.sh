@@ -46,12 +46,28 @@ else
     err_exit "${MODELNAME} NOT VALID"
 fi
 
+vpppg_obs_archive=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/global/archive/obs_data
+
 ############################################
 # create ASCII2NC NBDC files and PB2NC GDAS files
 ############################################
 poe_script=${DATA}/jobs/run_all_2NC_poe.sh
 echo 'Creating NDBC ascii2nc files'
-input_ascii2nc_ndbc_path=$COMIN/prep/${COMPONENT}/wave.${VDATE}/ndbc
+if [ $envir = prod ]; then
+    input_ascii2nc_ndbc_path=$COMIN/prep/${COMPONENT}/wave.${VDATE}/ndbc
+elif [ $envir = dev ]; then
+    mkdir -p ndbc
+    if [[ $VDATE -le 20230820 ]] && [[ $VDATE -ge 20230804 ]]; then
+        ndbc_tar_file=${vpppg_obs_archive}/ndbc_buoy/buoy_20230821.tar
+    else
+        VDATEp1=$($NDATE +24 ${VDATE}00 | cut -c 1-8)
+        ndbc_tar_file=${vpppg_obs_archive}/ndbc_buoy/buoy_${VDATEp1}.tar
+    fi
+    if [ -f $ndbc_tar_file ]; then
+        tar -xvf ${ndbc_tar_file} -C ${DATA}/ndbc
+    fi
+    input_ascii2nc_ndbc_path=${DATA}/ndbc
+fi
 tmp_ascii2nc_ndbc_file=${DATA}/ncfiles/ndbc.${VDATE}.nc
 output_ascii2nc_ndbc_file=$COMOUTndbc/ndbc.${VDATE}.nc
 if [[ $input_ascii2nc_ndbc_path == *"/com/"* ]] || [[ $input_ascii2nc_ndbc_path == *"/dcom/"* ]]; then
@@ -66,6 +82,7 @@ else
     if [[ $nbdc_txt_ncount -ne 0 ]]; then
         echo "#!/bin/bash" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
         echo "" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
+        echo "export input_ascii2nc_ndbc_path=${input_ascii2nc_ndbc_path}" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
         echo "export MET_NDBC_STATIONS=${FIXevs}/ndbc_stations/ndbc_stations.xml" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
         echo "run_metplus.py ${PARMevs}/metplus_config/machine.conf ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}/ASCII2NC_obsNDBC.conf" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
         echo "export err=\$?; err_chk" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
@@ -82,7 +99,15 @@ echo ' '
 echo 'Creating GDAS pb2nc files'
 for valid_hour in ${valid_hours} ; do
     valid_hour2=$(printf "%02d" "${valid_hour}")
-    input_pb2nc_prepbufrgdas_file=$COMINobsproc/gdas.${VDATE}/${valid_hour2}/atmos/gdas.t${valid_hour2}z.prepbufr
+    if [ $envir = prod ]; then
+        input_pb2nc_prepbufrgdas_file=$COMINobsproc/gdas.${VDATE}/${valid_hour2}/atmos/gdas.t${valid_hour2}z.prepbufr
+        input_pb2nc_prepbufrgdas_dir=$COMINobsproc/gdas.${VDATE}/${valid_hour2}/atmos
+        input_pb2nc_prepbufrgdas_file_name=gdas.t${valid_hour2}z.prepbufr
+    elif [ $envir = dev ]; then
+        input_pb2nc_prepbufrgdas_file=${vpppg_obs_archive}/prepbufr/gdas/prepbufr.gdas.${VDATE}${valid_hour2}
+        input_pb2nc_prepbufrgdas_dir=${vpppg_obs_archive}/prepbufr/gdas
+        input_pb2nc_prepbufrgdas_file_name=prepbufr.gdas.${VDATE}${valid_hour2}
+    fi
     tmp_pb2nc_prepbufrgdas_file=${DATA}/ncfiles/gdas.${VDATE}${valid_hour2}.nc
     output_pb2nc_prepbufrgdas_file=$COMOUTprepbufr/gdas.${VDATE}${valid_hour2}.nc
     if [[ -s $output_pb2nc_prepbufrgdas_file ]]; then
@@ -108,6 +133,8 @@ for valid_hour in ${valid_hours} ; do
             echo "#!/bin/bash" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${valid_hour2}.sh
             echo "" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${valid_hour2}.sh
             echo "export valid_hour2=$valid_hour2" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${valid_hour2}.sh
+            echo "export input_pb2nc_prepbufrgdas_dir=$input_pb2nc_prepbufrgdas_dir" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${valid_hour2}.sh
+            echo "export input_pb2nc_prepbufrgdas_file_name=$input_pb2nc_prepbufrgdas_file_name" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${valid_hour2}.sh
             echo "run_metplus.py ${PARMevs}/metplus_config/machine.conf ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}/PB2NC_obsPrepbufrGDAS.conf" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${valid_hour2}.sh
             echo "export err=\$?; err_chk" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${valid_hour2}.sh
             echo "chmod 640 $tmp_pb2nc_prepbufrgdas_file" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${valid_hour2}.sh
@@ -189,7 +216,11 @@ for valid_hour in ${valid_hours} ; do
         flead=$(printf "%03d" "${fhr}")
         flead2=$(printf "%02d" "${fhr}")
         if [ $MODELNAME == "gfs" ]; then
-            input_model_file=$COMIN/prep/$COMPONENT/${RUN}.${match_date}/${MODELNAME}/${MODELNAME}${RUN}.${match_date}.t${match_fhr}z.global.0p25.f${flead}.grib2
+            if [ $envir = prod ]; then
+                input_model_file=$COMIN/prep/$COMPONENT/${RUN}.${match_date}/${MODELNAME}/${MODELNAME}${RUN}.${match_date}.t${match_fhr}z.global.0p25.f${flead}.grib2
+            elif [ $envir = dev ]; then
+                input_model_file=$COMINgfs/${MODELNAME}.${match_date}/${match_fhr}/wave/gridded/${MODELNAME}${RUN}.t${match_fhr}z.global.0p25.f${flead}.grib2
+            fi
         fi
         tmp_model_file=$DATA/gribs/${MODELNAME}${RUN}.${match_date}.t${match_fhr}z.global.0p25.f${flead}.grib2
         if [[ -s $input_model_file ]]; then
