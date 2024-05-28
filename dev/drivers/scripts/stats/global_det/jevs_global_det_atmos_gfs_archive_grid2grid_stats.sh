@@ -59,6 +59,8 @@ export PARTITION_BATCH=
 export METviewer_AWS_scripts_dir=/lfs/h2/emc/vpppg/save/emc.vpppg/verification/metplus/metviewer_aws_scripts
 export archive_obs_data_dir=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/global/archive/obs_data
 export COMINgfs=/lfs/h2/emc/vpppg/noscrub/mallory.row/verification/global/verify_gfsv17/gfs
+export COMINobsproc=/lfs/h1/ops/prod/com/obsproc/$obsproc_ver
+export COMINccpa=/lfs/h1/ops/prod/com/ccpa/$ccpa_ver
 
 export VDATE=20240514
 
