@@ -65,7 +65,7 @@ if [ $RUN_GRID2GRID_PLOTS = YES ]; then
     export g2gp_pres_levs_init_hr_list="00 12"
     export g2gp_pres_levs_valid_hr_list="00 12"
     export g2gp_pres_levs_fhr_min=24
-    export g2gp_pres_levs_fhr_max=240
+    export g2gp_pres_levs_fhr_max=384
     export g2gp_pres_levs_fhr_inc=24
 fi
 
