@@ -35,6 +35,10 @@ fi
 export NET=evs
 export RUN=evs
 
+export SENDMAIL=YES
+export MAILTO=nco.spa@noaa.gov
+export MAILCC=nco.dataflow@noaa.gov
+
 ############################################################
 # Execute j-job
 ############################################################
