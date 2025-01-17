@@ -52,6 +52,8 @@ export SENDECF=${SENDECF:-YES}
 export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export SENDMAIL=${SENDMAIL:-NO}
+export MAILTO=${MAILTO:-${USER}@noaa.gov}
+export MAILCC=${MAILCC:-""}
 
 ####################################
 # Define COMIN/COMOUT variables
