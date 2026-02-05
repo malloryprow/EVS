@@ -1,29 +1,40 @@
 #!/usr/bin/env python3
-# =============================================================================
-#
-# NAME: cam_create_output_dirs.py
-# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Define working/ output directories and create them if they don't
-#          exist.
-# DEPENDENCIES: os.path.join([
-#                   SCRIPTSevs,COMPONENT,STEP,
-#                   "_".join(["exevs",MODELNAME,VERIF_CASE,STEP+".sh"]
-#               )]
-#
-# =============================================================================
+"""
+cam_create_output_dirs.py
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov
+----------------------
+Defines working and output directories for the cam component and creates them
+if they do not exist.
+
+Environment Variables (Inputs):
+    Various variables including STEP, VERIF_CASE, DATA, COMPONENT, MODELNAME,
+    and others required for directory structure and naming.
+
+Outputs:
+    - Creates required working and output directories if they do not exist.
+    - Prints errors and exits if critical environment variables are missing or
+      if directory creation fails.
+
+This script is intended to be run as part of the cam component to ensure all
+required directories are present before downstream processing.
+"""
 
 import os
-import re
-from datetime import datetime, timedelta as td
+from datetime import datetime
+from datetime import timedelta as td
+
 import cam_util as cutil
+
 if os.environ['STEP'] == 'plots':
     if os.environ['VERIF_CASE'] == 'grid2obs':
         from cam_plots_grid2obs_graphx_defs import graphics as graphics_g2o
     if os.environ['VERIF_CASE'] == 'headline':
         from cam_plots_headline_graphx_defs import graphics as graphics_hdl
     if os.environ['VERIF_CASE'] == 'precip':
-        from cam_plots_precip_last31days_graphx_defs import graphics as graphics_pcp31
-        from cam_plots_precip_last90days_graphx_defs import graphics as graphics_pcp90
+        from cam_plots_precip_last31days_graphx_defs import \
+            graphics as graphics_pcp31
+        from cam_plots_precip_last90days_graphx_defs import \
+            graphics as graphics_pcp90
     if os.environ['VERIF_CASE'] == 'snowfall':
         from cam_plots_snowfall_graphx_defs import graphics as graphics_sno
 
@@ -40,8 +51,21 @@ COMPONENT = os.environ['COMPONENT']
 VERIF_CASE = os.environ['VERIF_CASE']
 STEP = os.environ['STEP']
 MODELNAME = os.environ['MODELNAME']
-VDATE = os.environ['VDATE']
-vdate_dt = datetime.strptime(VDATE, '%Y%m%d')
+if STEP == 'prep':
+    INITDATE = os.environ['INITDATE']
+    vdate_dt = datetime.strptime(INITDATE, '%Y%m%d')
+elif STEP == 'stats':
+    VDATE = os.environ['VDATE']
+    vdate_dt = datetime.strptime(VDATE, '%Y%m%d')
+    COMOUTsmall = os.environ['COMOUTsmall']
+    RESTART_DIR = os.environ['RESTART_DIR']
+    COMPLETED_JOBS_DIR = os.environ['COMPLETED_JOBS_DIR']
+    job_type = os.environ['job_type']
+elif STEP == 'plots':
+    VDATE = os.environ['VDATE']
+    vdate_dt = datetime.strptime(VDATE, '%Y%m%d')
+    RESTART_DIR = os.environ['RESTART_DIR']
+    COMPLETED_JOBS_DIR = os.environ['COMPLETED_JOBS_DIR']
 if VERIF_CASE == "precip":
     if STEP == 'prep':
         FHR_END_FULL = os.environ['FHR_END_FULL']
@@ -59,10 +83,10 @@ if VERIF_CASE == "precip":
         OBSNAME = os.environ['OBSNAME']
     elif STEP == 'plots':
         EVAL_PERIOD = os.environ['EVAL_PERIOD']
-        if EVAL_PERIOD == 'last31days':
-            all_eval_periods = cutil.get_all_eval_periods(graphics_pcp31)
-        elif EVAL_PERIOD == 'last90days':
+        if EVAL_PERIOD == 'last90days':
             all_eval_periods = cutil.get_all_eval_periods(graphics_pcp90)
+        elif EVAL_PERIOD == 'last31days':
+            all_eval_periods = cutil.get_all_eval_periods(graphics_pcp31)
         else:
             raise ValueError(
                 'Invalid value for environment variable \"EVAL_PERIOD\": '
@@ -102,12 +126,6 @@ elif VERIF_CASE == "headline":
     if STEP == 'plots':
         all_eval_periods = cutil.get_all_eval_periods(graphics_hdl)
         COMOUTplots = os.environ['COMOUTplots']
-if STEP == 'stats':
-    COMOUTsmall = os.environ['COMOUTsmall']
-    RESTART_DIR = os.environ['RESTART_DIR']
-    job_type = os.environ['job_type']
-if STEP == 'plots':
-    RESTART_DIR = os.environ['RESTART_DIR']
 
 
 # Define data base directorie
@@ -144,15 +162,27 @@ for data_dir in data_dir_list:
 # Create job script base directory
 job_scripts_dirs = []
 if STEP == 'prep':
-    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, STEP, 'prep_job_scripts'))
+    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'prep_job_scripts'))
 if STEP == 'stats':
-    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, STEP, 'METplus_job_scripts', 'reformat'))
-    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, STEP, 'METplus_job_scripts', 'generate'))
-    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, STEP, 'METplus_job_scripts', 'gather'))
-    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, STEP, 'METplus_job_scripts', 'gather2'))
-    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, STEP, 'METplus_job_scripts', 'gather3'))
+    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_job_scripts', 'reformat'))
+    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_job_scripts', 'generate'))
+    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_job_scripts', 'gather'))
+    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_job_scripts', 'gather2'))
+    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_job_scripts', 'gather3'))
+    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_output', COMPLETED_JOBS_DIR, 'reformat'))
+    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_output', COMPLETED_JOBS_DIR, 'generate'))
+    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_output', COMPLETED_JOBS_DIR, 'gather'))
+    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_output', COMPLETED_JOBS_DIR, 'gather2'))
+    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_output', COMPLETED_JOBS_DIR, 'gather3'))
+    job_scripts_dirs.append(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR, 'reformat'))
+    job_scripts_dirs.append(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR, 'generate'))
+    job_scripts_dirs.append(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR, 'gather'))
+    job_scripts_dirs.append(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR, 'gather2'))
+    job_scripts_dirs.append(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR, 'gather3'))
 if STEP == 'plots':
-    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, STEP, 'plotting_job_scripts'))
+    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'plotting_job_scripts'))
+    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'out', COMPLETED_JOBS_DIR))
+    job_scripts_dirs.append(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR))
 for job_scripts_dir in job_scripts_dirs:
     if not os.path.exists(job_scripts_dir):
         print(f"Creating job script directory: {job_scripts_dir}")
@@ -627,7 +657,7 @@ elif STEP == 'plots':
         COMOUT_dir_list.append(os.path.join(
             COMOUTplots, VERIF_CASE
         ))
-        for plot_group in ['precip']:
+        for plot_group in ['snowfall']:
             for eval_period in all_eval_periods:
                 working_dir_list.append(os.path.join(
                     working_output_base_dir, 'out', str(plot_group).lower(), 
@@ -664,7 +694,7 @@ elif STEP == 'plots':
             COMOUTplots, VERIF_CASE
         ))
         for plot_group in [
-                'cape', 'ceil_vis', 'precip', 'sfc_upper'
+                'sfc_upper'
             ]:
             for eval_period in all_eval_periods:
                 working_dir_list.append(os.path.join(

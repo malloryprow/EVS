@@ -329,6 +329,13 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
                                   + f" not found and will not be plotted.")
             logger.warning(warning_string)
             logger.warning("Continuing ...")
+    else:
+        # No obs thresh requested: keep ONLY rows with no obs thresh
+        nullish = (
+            df['OBS_THRESH'].isna()
+            | df['OBS_THRESH'].astype(str).str.strip().isin(['', 'NA', 'NaN', 'nan'])
+        )
+        df = df[nullish]
     if fcst_thresh and '' not in fcst_thresh:
         requested_fcst_thresh_symbol, requested_fcst_thresh_letter = list(
             zip(*[plot_util.format_thresh(t) for t in fcst_thresh])
@@ -381,6 +388,13 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
                                   + f" not found and will not be plotted.")
             logger.warning(warning_string)
             logger.warning("Continuing ...")
+    else:
+        # No fcst thresh requested: keep ONLY rows with no fcst thresh
+        nullish = (
+            df['FCST_THRESH'].isna()
+            | df['FCST_THRESH'].astype(str).str.strip().isin(['', 'NA', 'NaN', 'nan'])
+        )
+        df = df[nullish]
 
     # Remove from model_list the models that don't exist in the dataframe
     cols_to_keep = [
@@ -1335,7 +1349,8 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
         else:
             title2 = f'{level_string}{var_long_name} (unitless), {domain_string}'
     title3 = (f'{str(date_type).capitalize()} {date_hours_string} '
-              + f'{date_start_string} to {date_end_string}, {frange_string}')
+              + f'{date_start_string} to {date_end_string}, {frange_string}, ' 
+              + f'Validation: {str(verif_type).upper()} ')
     title_center = '\n'.join([title1, title2, title3])
     if sample_equalization:
         title_pad=23
@@ -1414,8 +1429,7 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
     if save_header:
         save_name = f'{save_header}.'+save_name
     save_subdir = os.path.join(
-        save_dir, f'{str(plot_group).lower()}', 
-        f'{str(time_period_savename).lower()}'
+        save_dir, f'{str(plot_group).lower()}'  
     )
     if not os.path.isdir(save_subdir):
         try:
@@ -1431,7 +1445,6 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
             os.path.join(
                 restart_dir,
                 f'{str(plot_group).lower()}',
-                f'{str(time_period_savename).lower()}',
                 save_name+'.png'
             )
         )

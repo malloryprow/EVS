@@ -8,14 +8,13 @@
 #   12/22/2022: Initial script modified to follow NCO standards
 ###############################################################################
 
-import sys, os, shutil, subprocess
-import datetime
-import re, csv, glob
 import bisect
-import numpy as np
+import datetime
+import glob
+import os
 
 
-valid_date = os.environ['VDATE'] 
+valid_date = os.environ['INITDATE'] 
 vhr = os.environ['vhr']
 
 YYYY = int(valid_date[0:4])

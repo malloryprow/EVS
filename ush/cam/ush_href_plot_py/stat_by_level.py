@@ -30,6 +30,7 @@ from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 from datetime import datetime, timedelta as td
 
 SETTINGS_DIR = os.environ['USH_DIR']
+valid_src = os.environ['obsv']
 sys.path.insert(0, os.path.abspath(SETTINGS_DIR))
 from settings import Toggle, Templates, Paths, Presets, ModelSpecs, Reference
 from plotter import Plotter
@@ -321,7 +322,7 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
     if (metric2_name and (pivot_metric1.empty or pivot_metric2.empty)):
         print_varname = df['FCST_VAR'].tolist()[0]
         logger.warning(
-            f"Could not find (and cannot plot) {metric1_name} and/or"
+            f"Could not find {metric1_name} and/or"
             + f" {metric2_name} stats for {print_varname} at any pressure"
             + f" level. This often happens when processed data are all NaNs, "
             + f" which are removed.  Check for seasonal cases where critical "
@@ -333,7 +334,7 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
     elif not metric2_name and pivot_metric1.empty:
         print_varname = df['FCST_VAR'].tolist()[0]
         logger.warning(
-            f"Could not find (and cannot plot) {metric1_name}"
+            f"Could not find {metric1_name}"
             + f" stats for {print_varname} at any pressure level. "
             + f"This often happens when processed data are all NaNs, "
             + f" which are removed.  Check for seasonal cases where critical "
@@ -509,6 +510,7 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
     else:
         handles = []
         labels = []
+    n_mods = 0
     for m in range(len(mod_setting_dicts)):
         if model_list[m] in model_colors.model_alias:
             model_plot_name = (
@@ -546,9 +548,10 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
             else:
                 x_vals_metric_min = np.nanmin(x_vals_metric1)
                 x_vals_metric_max = np.nanmax(x_vals_metric1)
-            if m == 0:
+            if n_mods == 0:
                 x_mod_min = x_vals_metric_min
                 x_mod_max = x_vals_metric_max
+                n_mods+=1
             else:
                 x_mod_min = np.nanmin([x_mod_min, x_vals_metric_min])
                 x_mod_max = np.nanmax([x_mod_max, x_vals_metric_max])
@@ -705,12 +708,12 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
     ]
     xlim_min = np.floor(x_min/round_to_nearest)*round_to_nearest
     xlim_max = np.ceil(x_max/round_to_nearest)*round_to_nearest
-    if len(str(xlim_min)) > 5 and np.abs(xlim_min) < 1.:
+    if len(str(xlim_min)) > 5 and np.abs(xlim_min) < 1E5:
         xlim_min = float(
             np.format_float_scientific(xlim_min, unique=False, precision=3)
         )
     xticks = np.arange(xlim_min, xlim_max+round_to_nearest, round_to_nearest)
-    if any([len(str(xtick)) > 5 and np.abs(xtick) < 1. for xtick in xticks]):
+    if any([len(str(xtick)) > 5 and np.abs(xtick) < 1E5 for xtick in xticks]):
         xtick_labels = []
         for xtick in xticks:
             xtick_labels.append(float(np.format_float_scientific(
@@ -864,6 +867,7 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
         title2 = f'{var_long_name} ({units}), {domain_string}'
     else:
         title2 = f'{var_long_name} (unitless), {domain_string}'
+    title2 += f'{valid_src}'
     title3 = (f'{str(date_type).capitalize()} {date_hours_string}'
               + f' {date_start_string} to {date_end_string}, {frange_string}')
     title_center = '\n'.join([title1, title2, title3])

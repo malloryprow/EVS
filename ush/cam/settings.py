@@ -1,15 +1,28 @@
 #!/usr/bin/env python3
-# =============================================================================
-#
-# NAME: settings.py
-# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: General settings used for CAM plotting scripts
-#
-# =============================================================================
+"""
+settings.py
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov
+----------------------
+General settings and configuration classes for the cam component.
+
+Environment Variables (Inputs):
+    None (this module is imported and used by other scripts).
+
+Outputs:
+    - Provides classes and constants for plot settings, templates, paths,
+      presets, model specifications, and references, used by other scripts in
+      the cam component.
+
+This module is intended to be imported by other scripts in the cam component
+to provide shared configuration and settings for plotting and verification.
+"""
 
 import os
-from datetime import datetime, timedelta as td
+from datetime import datetime
+from datetime import timedelta as td
+
 import numpy as np
+
 
 class Toggle():
     def __init__(self):
@@ -824,6 +837,13 @@ class Reference():
         keys and values, not forgetting to include a comma at the end of any 
         new lines.
         '''
+        self.verif_type_translator = {'ccpa': 'CCPA',
+                                      'mrms': 'MRMS',
+                                      'nohrsc': 'NOHRSC',
+                                      'raob': 'RAOB',
+                                      'metar': 'METAR',
+                                      'lsr': 'Local Storm Reports (LSR)',
+        }
         self.variable_translator = {'TMP': 'Temperature',
                                     'TMP_Z0_mean': 'Temperature',
                                     'HGT': 'Geopotential Height',
@@ -872,9 +892,9 @@ class Reference():
                                     'SNOD': 'Accum. Snow Depth',
                                     'SNOD_06': ('6-hour Accum. Snow Depth'),
                                     'SNOD_24': ('24-hour Accum. Snow Depth'),
-                                    'ASNOW': 'Total Snowfall',
-                                    'ASNOW_06': ('6-hour Total Snowfall'),
-                                    'ASNOW_24': ('24-hour Total Snowfall'),
+                                    'ASNOW': 'Accumulated Snowfall',
+                                    'ASNOW_06': ('6-hour Accumulated Snowfall'),
+                                    'ASNOW_24': ('24-hour Accumulated Snowfall'),
                                     'APCP': ('Accumulated'
                                                 + ' Precipitation'),
                                     'APCP_01': ('Accumulated'
@@ -3550,7 +3570,7 @@ class Reference():
                                     'fcst_var_levels': ['A03','A3'],
                                     'fcst_var_thresholds': '',
                                     'fcst_var_options': '',
-                                    'obs_var_names': ['MultiSensor_QPE_01H_Pass2_Z0', 'APCP', 'APCP_03', 'APCP_01_Z0', 'A03'],
+                                    'obs_var_names': ['MultiSensor_QPE_01H_Pass2_Z0', 'MultiSensor_QPE_03H_Pass2_Z0', 'APCP', 'APCP_03', 'APCP_01_Z0', 'A03'],
                                     'obs_var_levels': ['A03','A3','Z0'],
                                     'obs_var_thresholds': '',
                                     'obs_var_options': '',
@@ -3559,7 +3579,7 @@ class Reference():
                                     'fcst_var_levels': ['A06','A6'],
                                     'fcst_var_thresholds': '',
                                     'fcst_var_options': '',
-                                    'obs_var_names': ['MultiSensor_QPE_01H_Pass2_Z0', 'APCP', 'APCP_06', 'APCP_01_Z0', 'A06'],
+                                    'obs_var_names': ['MultiSensor_QPE_01H_Pass2_Z0', 'MultiSensor_QPE_03H_Pass2_Z0', 'APCP', 'APCP_06', 'APCP_01_Z0', 'A06'],
                                     'obs_var_levels': ['A06','A6','Z0'],
                                     'obs_var_thresholds': '',
                                     'obs_var_options': '',
@@ -3568,7 +3588,7 @@ class Reference():
                                     'fcst_var_levels': ['A24'],
                                     'fcst_var_thresholds': '',
                                     'fcst_var_options': '',
-                                    'obs_var_names': ['MultiSensor_QPE_01H_Pass2_Z0', 'APCP', 'APCP_24', 'APCP_01_Z0','A24'],
+                                    'obs_var_names': ['MultiSensor_QPE_01H_Pass2_Z0', 'MultiSensor_QPE_03H_Pass2_Z0', 'MultiSensor_QPE_24H_Pass2_Z0', 'APCP', 'APCP_24', 'APCP_01_Z0','A24'],
                                     'obs_var_levels': ['A24','Z0'],
                                     'obs_var_thresholds': '',
                                     'obs_var_options': '',
@@ -3611,7 +3631,7 @@ class Reference():
                                                             + ' >=25.4,'
                                                             + ' >=50.8,'),
                                     'fcst_var_options': '',
-                                    'obs_var_names': ['MultiSensor_QPE_01H_Pass2_Z0', 'APCP', 'APCP_03', 'APCP_01_Z0', 'A03'],
+                                    'obs_var_names': ['MultiSensor_QPE_01H_Pass2_Z0', 'MultiSensor_QPE_03H_Pass2_Z0', 'APCP', 'APCP_03', 'APCP_01_Z0', 'A03'],
                                     'obs_var_levels': ['A03','A3','Z0'],
                                     'obs_var_thresholds': ('>=0.254, >=1.27,'
                                                            + ' >=2.54,'
@@ -3634,7 +3654,7 @@ class Reference():
                                                             + ' >=76.2,'
                                                             + ' >=101.6'),
                                     'fcst_var_options': '',
-                                    'obs_var_names': ['MultiSensor_QPE_01H_Pass2_Z0', 'APCP', 'APCP_06', 'APCP_01_Z0','A06'],
+                                    'obs_var_names': ['MultiSensor_QPE_01H_Pass2_Z0', 'MultiSensor_QPE_03H_Pass2_Z0', 'APCP', 'APCP_06', 'APCP_01_Z0','A06'],
                                     'obs_var_levels': ['A06','A6','Z0'],
                                     'obs_var_thresholds': ('>=0.254, >=2.54,'
                                                            + ' >=6.35,'
@@ -3659,7 +3679,7 @@ class Reference():
                                                             + ' >=101.6'
                                                             + ' >=152.4'),
                                     'fcst_var_options': '',
-                                    'obs_var_names': ['MultiSensor_QPE_01H_Pass2_Z0', 'APCP', 'APCP_24', 'APCP_01_Z0','A24'],
+                                    'obs_var_names': ['MultiSensor_QPE_01H_Pass2_Z0', 'MultiSensor_QPE_03H_Pass2_Z0', 'MultiSensor_QPE_24H_Pass2_Z0', 'APCP', 'APCP_24', 'APCP_01_Z0','A24'],
                                     'obs_var_levels': ['A24','Z0'],
                                     'obs_var_thresholds': ('>=0.254, >=2.54,'
                                                            + ' >=6.35,'
@@ -3711,7 +3731,7 @@ class Reference():
                                                             + ' >=25.4,'
                                                             + ' >=50.8,'),
                                     'fcst_var_options': '',
-                                    'obs_var_names': ['MultiSensor_QPE_01H_Pass2_Z0', 'APCP', 'APCP_03', 'APCP_01_Z0','A03'],
+                                    'obs_var_names': ['MultiSensor_QPE_01H_Pass2_Z0', 'MultiSensor_QPE_03H_Pass2_Z0', 'APCP', 'APCP_03', 'APCP_01_Z0', 'A03'],
                                     'obs_var_levels': ['A03','A3','Z0'],
                                     'obs_var_thresholds': ('>=0.254, >=1.27,'
                                                            + ' >=2.54,'
@@ -3734,7 +3754,7 @@ class Reference():
                                                             + ' >=76.2,'
                                                             + ' >=101.6'),
                                     'fcst_var_options': '',
-                                    'obs_var_names': ['MultiSensor_QPE_01H_Pass2_Z0', 'APCP', 'APCP_06', 'APCP_01_Z0','A06'],
+                                    'obs_var_names': ['MultiSensor_QPE_01H_Pass2_Z0', 'MultiSensor_QPE_03H_Pass2_Z0', 'APCP', 'APCP_06', 'APCP_01_Z0', 'A06'],
                                     'obs_var_levels': ['A06','A6','Z0'],
                                     'obs_var_thresholds': ('>=0.254, >=2.54,'
                                                            + ' >=6.35,'
@@ -3759,7 +3779,7 @@ class Reference():
                                                             + ' >=101.6'
                                                             + ' >=152.4'),
                                     'fcst_var_options': '',
-                                    'obs_var_names': ['MultiSensor_QPE_01H_Pass2_Z0', 'APCP', 'APCP_24', 'APCP_01_Z0','A24'],
+                                    'obs_var_names': ['MultiSensor_QPE_01H_Pass2_Z0', 'MultiSensor_QPE_03H_Pass2_Z0', 'MultiSensor_QPE_24H_Pass2_Z0', 'APCP', 'APCP_24', 'APCP_01_Z0','A24'],
                                     'obs_var_levels': ['A24','Z0'],
                                     'obs_var_thresholds': ('>=0.254, >=2.54,'
                                                            + ' >=6.35,'
@@ -3798,7 +3818,7 @@ class Reference():
                                                            + ' >=0.2032,'
                                                            + ' >=0.3048,'),
                                     'obs_var_options': '',
-                                    'plot_group':'precip'},
+                                    'plot_group':'snowfall'},
                         'WEASD_24': {'fcst_var_names': ['WEASD', 'WEASD_24'],
                                     'fcst_var_levels': ['Z0','A24'],
                                     'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
@@ -3813,7 +3833,7 @@ class Reference():
                                                            + ' >=0.2032,'
                                                            + ' >=0.3048,'),
                                     'obs_var_options': '',
-                                    'plot_group':'precip'},
+                                    'plot_group':'snowfall'},
                         'SNOD_06': {'fcst_var_names': ['SNOD', 'SNOD_06'],
                                     'fcst_var_levels': ['Z0','A06','A6'],
                                     'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
@@ -3828,7 +3848,7 @@ class Reference():
                                                            + ' >=0.2032,'
                                                            + ' >=0.3048,'),
                                     'obs_var_options': '',
-                                    'plot_group':'precip'},
+                                    'plot_group':'snowfall'},
                         'SNOD_24': {'fcst_var_names': ['SNOD', 'SNOD_24'],
                                     'fcst_var_levels': ['Z0','A24'],
                                     'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
@@ -3843,7 +3863,7 @@ class Reference():
                                                            + ' >=0.2032,'
                                                            + ' >=0.3048,'),
                                     'obs_var_options': '',
-                                    'plot_group':'precip'},
+                                    'plot_group':'snowfall'},
                         'ASNOW_06': {'fcst_var_names': ['ASNOW', 'ASNOW_06'],
                                     'fcst_var_levels': ['Z0','A06','A6'],
                                     'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
@@ -3858,7 +3878,7 @@ class Reference():
                                                            + ' >=0.2032,'
                                                            + ' >=0.3048,'),
                                     'obs_var_options': '',
-                                    'plot_group':'precip'},
+                                    'plot_group':'snowfall'},
                         'ASNOW_24': {'fcst_var_names': ['ASNOW', 'ASNOW_24'],
                                     'fcst_var_levels': ['Z0','A24'],
                                     'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
@@ -3873,7 +3893,7 @@ class Reference():
                                                            + ' >=0.2032,'
                                                            + ' >=0.3048,'),
                                     'obs_var_options': '',
-                                    'plot_group':'precip'}
+                                    'plot_group':'snowfall'}
                     }
                 },
                 'CTC': {
@@ -3901,7 +3921,7 @@ class Reference():
                                                            + ' >=0.2032,'
                                                            + ' >=0.3048,'),
                                     'obs_var_options': '',
-                                    'plot_group':'precip'},
+                                    'plot_group':'snowfall'},
                         'WEASD_24': {'fcst_var_names': ['WEASD', 'WEASD_24'],
                                     'fcst_var_levels': ['Z0','A24'],
                                     'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
@@ -3916,7 +3936,7 @@ class Reference():
                                                            + ' >=0.2032,'
                                                            + ' >=0.3048,'),
                                     'obs_var_options': '',
-                                    'plot_group':'precip'},
+                                    'plot_group':'snowfall'},
                         'SNOD_06': {'fcst_var_names': ['SNOD', 'SNOD_06'],
                                     'fcst_var_levels': ['Z0','A06','A6'],
                                     'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
@@ -3931,7 +3951,7 @@ class Reference():
                                                            + ' >=0.2032,'
                                                            + ' >=0.3048,'),
                                     'obs_var_options': '',
-                                    'plot_group':'precip'},
+                                    'plot_group':'snowfall'},
                         'SNOD_24': {'fcst_var_names': ['SNOD', 'SNOD_24'],
                                     'fcst_var_levels': ['Z0','A24'],
                                     'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
@@ -3946,7 +3966,7 @@ class Reference():
                                                            + ' >=0.2032,'
                                                            + ' >=0.3048,'),
                                     'obs_var_options': '',
-                                    'plot_group':'precip'},
+                                    'plot_group':'snowfall'},
                         'ASNOW_06': {'fcst_var_names': ['ASNOW', 'ASNOW_06'],
                                     'fcst_var_levels': ['Z0','A06','A6'],
                                     'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
@@ -3961,7 +3981,7 @@ class Reference():
                                                            + ' >=0.2032,'
                                                            + ' >=0.3048,'),
                                     'obs_var_options': '',
-                                    'plot_group':'precip'},
+                                    'plot_group':'snowfall'},
                         'ASNOW_24': {'fcst_var_names': ['ASNOW', 'ASNOW_24'],
                                     'fcst_var_levels': ['Z0','A24'],
                                     'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
@@ -3976,7 +3996,7 @@ class Reference():
                                                            + ' >=0.2032,'
                                                            + ' >=0.3048,'),
                                     'obs_var_options': '',
-                                    'plot_group':'precip'}
+                                    'plot_group':'snowfall'}
                     }
                 }
             },

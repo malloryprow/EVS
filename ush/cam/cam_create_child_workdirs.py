@@ -1,13 +1,32 @@
 #!/usr/bin/env python3
-# =============================================================================
-#
-# NAME: cam_create_child_workdirs.py
-# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Write output directories used by child processors (MPMD operations)
-#
-# =============================================================================
+"""
+cam_create_child_workdirs.py
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov
+----------------------
+Creates and checks output directories used by child processors (MPMD
+operations) in the cam component.
+
+Environment Variables (Inputs):
+    DATA: str
+        Top-level data directory.
+    VERIF_CASE: str
+        Verification case name.
+    STEP: str
+        Workflow step (e.g., 'prep', 'stats', 'plots').
+    job_type: str (if STEP == 'stats')
+        Type of job for stats step.
+
+Outputs:
+    - Raises OSError if required output or working directories do not exist.
+    - Sets up directory paths for downstream processing in the cam component.
+
+This script is intended to be run as part of the cam component to ensure all
+required output and working directories are present before launching child
+processes.
+"""
 
 import os
+
 import cam_util as cutil
 
 DATA = os.environ['DATA']
@@ -28,7 +47,7 @@ if STEP == 'prep':
     )
 elif STEP == 'stats':
     jobdir = os.path.join(
-        DATA, VERIF_CASE, STEP, 'METplus_job_scripts', job_type
+        DATA, VERIF_CASE, 'METplus_job_scripts', job_type
     )
     outdir = os.path.join(
         DATA, VERIF_CASE, 'METplus_output'
@@ -38,7 +57,7 @@ elif STEP == 'stats':
     )
 elif STEP == 'plots':
     jobdir = os.path.join(
-        DATA, VERIF_CASE, STEP, 'plotting_job_scripts'
+        DATA, VERIF_CASE, 'plotting_job_scripts'
     )
     outdir = os.path.join(
         DATA, VERIF_CASE, 'out'
@@ -66,10 +85,15 @@ else:
             workdir = os.path.join(workdirs, job_name)
             if not os.path.exists(workdir):
                 os.makedirs(workdir)
+            # Exclude "workdirs" and "job" unless it's "completed_jobs"
+            # "-prune" prevents recursion into those excluded dirs
+            # Other than that, make all directories in current workdir
             cutil.run_shell_command([
-                'find', '.', '-type', 'd', '-not', '-path', 
-                '\"*workdirs*\"', '-not', '-path', '\"*job*\"', '-exec', 
-                'mkdir', '-p', os.path.join(workdir,'{}'), '\\;'
+                'find', '.', '\\(', '-path', 
+                '\"*workdirs*\"', '-o', '\\(', '-path', '\"*job*\"', 
+                '!', '-path', '\"*completed_jobs*\"', '\\)', '\\)', 
+                '-prune', '-o', '-type', 'd', '-exec', 'mkdir', '-p', 
+                os.path.join(workdir,'{}'), '\\;'
             ])
         if STEP == "prep":
             print(

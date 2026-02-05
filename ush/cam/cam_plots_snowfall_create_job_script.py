@@ -1,19 +1,26 @@
 #!/usr/bin/env python3
-# =============================================================================
-#
-# NAME: cam_plots_snowfall_create_job_script.sh
-# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Create EVS CAM Snowfall - Plots job scripts
-# DEPENDENCIES: $SCRIPTSevs/cam/stats/exevs_$MODELNAME_snowfall_plots.sh
-#
-# =============================================================================
+"""
+cam_plots_snowfall_create_job_script.py
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov
+----------------------
+Creates job scripts for EVS CAM Snowfall plots in the cam component.
 
-import sys
+Environment Variables (Inputs):
+    Various variables including PYTHONPATH, COMPONENT, STEP, VERIF_CASE,
+    MODELNAME, METPLUS_PATH, MET_ROOT, DATA, VDATE, and many others required
+    for job script creation and configuration.
+
+Outputs:
+    - Generates job scripts for plotting Snowfall statistics.
+    - Prints errors and exits if required environment variables are missing or
+      invalid.
+
+This script is intended to be run as part of the cam component to automate
+creation of plotting job scripts for Snowfall verification.
+"""
+
 import os
-import glob
-import re
-from datetime import datetime
-import numpy as np
+
 import cam_util as cutil
 
 print(f"BEGIN: {os.path.basename(__file__)}")
@@ -36,6 +43,7 @@ IMG_HEADER = os.environ['IMG_HEADER']
 PRUNE_DIR = os.environ['PRUNE_DIR']
 SAVE_DIR = os.environ['SAVE_DIR']
 RESTART_DIR = os.environ['RESTART_DIR']
+SENDCOM = os.environ['SENDCOM']
 LOG_TEMPLATE = os.environ['LOG_TEMPLATE']
 LOG_LEVEL = os.environ['LOG_LEVEL']
 STAT_OUTPUT_BASE_DIR = os.environ['STAT_OUTPUT_BASE_DIR']
@@ -64,7 +72,7 @@ CONFIDENCE_INTERVALS = os.environ['CONFIDENCE_INTERVALS']
 INTERP_PNTS = os.environ['INTERP_PNTS']
 PYTHONDONTWRITEBYTECODE = os.environ['PYTHONDONTWRITEBYTECODE']
 njob = os.environ['njob']
-COMPLETED_JOBS_FILE = os.environ['COMPLETED_JOBS_FILE']
+COMPLETED_JOBS_DIR = os.environ['COMPLETED_JOBS_DIR']
 
 # Make a dictionary of environment variables needed to run this particular job
 job_env_vars_dict = {
@@ -77,6 +85,7 @@ job_env_vars_dict = {
     'PRUNE_DIR': PRUNE_DIR,
     'SAVE_DIR': SAVE_DIR.format(njob=njob),
     'RESTART_DIR': RESTART_DIR,
+    'SENDCOM': SENDCOM,
     'STAT_OUTPUT_BASE_DIR': STAT_OUTPUT_BASE_DIR,
     'STAT_OUTPUT_BASE_TEMPLATE': STAT_OUTPUT_BASE_TEMPLATE,
     'LOG_TEMPLATE': LOG_TEMPLATE.format(njob=njob),
@@ -119,7 +128,7 @@ if STEP == 'prep':
 elif STEP == 'stats':
     pass
 elif STEP == 'plots':
-    if f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)):
+    if f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_DIR)):
         job_cmd_list_iterative.append(
             f'#jobs were restarted, and the following command has already run successfully'
         )
@@ -135,7 +144,7 @@ elif STEP == 'plots':
         job_cmd_list_iterative.append(
             f"python -c "
             + f"'import cam_util; cam_util.mark_job_completed("
-            + f"\"{os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)}\", "
+            + f"\"{RESTART_DIR}\", \"{DATA}\", \"{VERIF_CASE}\", \"{COMPLETED_JOBS_DIR}\", "
             + f"\"job{njob}\")'"
         )
 
@@ -143,82 +152,85 @@ elif STEP == 'plots':
 indent = ''
 indent_width = 4
 iterative_first = True
-job_dir = os.path.join(DATA, VERIF_CASE, STEP, 'plotting_job_scripts')
+job_dir = os.path.join(DATA, VERIF_CASE, 'plotting_job_scripts')
 if not os.path.exists(job_dir):
     os.makedirs(job_dir)
 job_file = os.path.join(job_dir, f'job{njob}')
-print(f"Creating job script: {job_file}")
-job = open(job_file, 'w')
-job.write('#!/bin/bash\n')
-job.write('set -x \n')
-job.write('\n')
-job.write(f'export job_name=\"job{njob}\"\n')
-for name, value in job_env_vars_dict.items():
-    job.write(f'export {name}=\"{value}\"\n')
-job.write('\n')
-if not iterative_first:
-    for cmd in job_cmd_list:
-        job.write(f'{cmd}\n')
-for name_list, values in job_iterate_over_env_lists_dict.items():
-    name = name_list.replace('_LIST','')
-    items = ' '.join([f'\"{item}\"' for item in values['list_items']])
-    job.write(f'{indent}for {name} in {items}; do\n')
-    indent = indent_width*' ' + indent 
-    job.write(f'{indent}export {name}=${name}\n')
-    for var_name in values['exports']:
-        job.write(f'{indent}TARGET_{var_name}=\"{var_name}_$'+'{'+f'{name}'+'}\"\n')
-        job.write(f'{indent}export {var_name}=$'+'{!'+f'TARGET_{var_name}'+'}\n')
-        #job.write(f'{indent}export {var_name}=\"{value}\"\n')
-for name, value in job_dependent_vars.items():
-    if value["exec_value"]:
-        exec(f"{name}={value['exec_value']}")
-        job.write(
-            f'{indent}export {name}={globals()[name]}\n'
-        )
-    elif value["bash_value"]:
-        job.write(f'{indent}export {name}={value["bash_value"]}\n')
-    if (value["bash_conditional"] 
-            and (
-            value["bash_conditional_value"] 
-            or value["bash_conditional_else_value"])):
-        job.write(
-            f'{indent}if {value["bash_conditional"]};'
-            + f' then\n'
-        )
-        job.write(
-            f'{indent}{" "*indent_width}export {name}='
-            + f'{value["bash_conditional_value"]}\n'
-        )
-        if (value["bash_conditional_else_value"]):
+if not job_cmd_list and not job_cmd_list_iterative:
+    print(f"No commands to run / not creating job script: {job_file}")
+else:
+    print(f"Creating job script: {job_file}")
+    job = open(job_file, 'w')
+    job.write('#!/bin/bash\n')
+    job.write('set -x \n')
+    job.write('\n')
+    job.write(f'export job_name=\"job{njob}\"\n')
+    for name, value in job_env_vars_dict.items():
+        job.write(f'export {name}=\"{value}\"\n')
+    job.write('\n')
+    if not iterative_first:
+        for cmd in job_cmd_list:
+            job.write(f'{cmd}\n')
+    for name_list, values in job_iterate_over_env_lists_dict.items():
+        name = name_list.replace('_LIST','')
+        items = ' '.join([f'\"{item}\"' for item in values['list_items']])
+        job.write(f'{indent}for {name} in {items}; do\n')
+        indent = indent_width*' ' + indent 
+        job.write(f'{indent}export {name}=${name}\n')
+        for var_name in values['exports']:
+            job.write(f'{indent}TARGET_{var_name}=\"{var_name}_$'+'{'+f'{name}'+'}\"\n')
+            job.write(f'{indent}export {var_name}=$'+'{!'+f'TARGET_{var_name}'+'}\n')
+            #job.write(f'{indent}export {var_name}=\"{value}\"\n')
+    for name, value in job_dependent_vars.items():
+        if value["exec_value"]:
+            exec(f"{name}={value['exec_value']}")
             job.write(
-                f'{indent}else'
-                + f'\n'
+                f'{indent}export {name}={globals()[name]}\n'
+            )
+        elif value["bash_value"]:
+            job.write(f'{indent}export {name}={value["bash_value"]}\n')
+        if (value["bash_conditional"] 
+                and (
+                value["bash_conditional_value"] 
+                or value["bash_conditional_else_value"])):
+            job.write(
+                f'{indent}if {value["bash_conditional"]};'
+                + f' then\n'
             )
             job.write(
                 f'{indent}{" "*indent_width}export {name}='
-                + f'{value["bash_conditional_else_value"]}\n'
+                + f'{value["bash_conditional_value"]}\n'
             )
-        job.write(f'{indent}fi\n')
-for name, value in job_iterate_over_custom_lists_dict.items():
-    job.write(f"{indent}for {name} in {value['custom_list']}; do\n")
-    indent = indent_width*' ' + indent
-    job.write(f"{indent}export {name}=${value['export_value']}\n")
-    if value['dependent_vars']:
-        dep_names = value['dependent_vars']['names']
-        dep_values = value['dependent_vars']['values']
-        for dn, dep_name in enumerate(dep_names):
-            job.write(f"{indent}export {dep_name}={dep_values[dn]}\n")
-for cmd in job_cmd_list_iterative:
-    job.write(f'{indent}{cmd}\n')
-for name, value in job_iterate_over_custom_lists_dict.items():
-    indent = indent[indent_width:]
-    job.write(f'{indent}done\n')
-for name_list, value_list in job_iterate_over_env_lists_dict.items():
-    indent = indent[indent_width:]
-    job.write(f'{indent}done\n')
-if iterative_first:
-    for cmd in job_cmd_list:
-        job.write(f'{cmd}\n')
-job.close()
+            if (value["bash_conditional_else_value"]):
+                job.write(
+                    f'{indent}else'
+                    + f'\n'
+                )
+                job.write(
+                    f'{indent}{" "*indent_width}export {name}='
+                    + f'{value["bash_conditional_else_value"]}\n'
+                )
+            job.write(f'{indent}fi\n')
+    for name, value in job_iterate_over_custom_lists_dict.items():
+        job.write(f"{indent}for {name} in {value['custom_list']}; do\n")
+        indent = indent_width*' ' + indent
+        job.write(f"{indent}export {name}=${value['export_value']}\n")
+        if value['dependent_vars']:
+            dep_names = value['dependent_vars']['names']
+            dep_values = value['dependent_vars']['values']
+            for dn, dep_name in enumerate(dep_names):
+                job.write(f"{indent}export {dep_name}={dep_values[dn]}\n")
+    for cmd in job_cmd_list_iterative:
+        job.write(f'{indent}{cmd}\n')
+    for name, value in job_iterate_over_custom_lists_dict.items():
+        indent = indent[indent_width:]
+        job.write(f'{indent}done\n')
+    for name_list, value_list in job_iterate_over_env_lists_dict.items():
+        indent = indent[indent_width:]
+        job.write(f'{indent}done\n')
+    if iterative_first:
+        for cmd in job_cmd_list:
+            job.write(f'{cmd}\n')
+    job.close()
 
 print(f"END: {os.path.basename(__file__)}")

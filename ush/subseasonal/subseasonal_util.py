@@ -136,7 +136,7 @@ def log_missing_file_model(log_missing_file, missing_file, model, init_dt,
             lmf.write("#!/bin/bash\n")
             lmf.write(f'export subject="F{fhr} {model.upper()} Forecast '
                       +'Data Missing for EVS subseasonal"\n')
-            lmf.write(f'echo "Warning: No {model.upper()} forecast was '
+            lmf.write(f'echo "WARNING: No {model.upper()} forecast was '
                       +f'available for {init_dt:%Y%m%d%H}f{fhr}" '
                       +'> mailmsg\n')
             lmf.write(f'echo "Missing file is {missing_file}" >> mailmsg\n')
@@ -160,14 +160,14 @@ def log_missing_file_obs(log_missing_file, missing_file, obs, valid_dt):
                 lmf.write(f'export subject="{obs.upper()} prepbufr Data '
                           +'Missing for '
                           +'EVS subseasonal"\n')
-                lmf.write(f'echo "Warning: No {obs.upper()} prepbufr data '
+                lmf.write(f'echo "WARNING: No {obs.upper()} prepbufr data '
                           +f'was available for '
                           +f'valid date {valid_dt:%Y%m%d%H}" > mailmsg\n')
             else:
                 lmf.write(f'export subject="{obs.upper()} Analysis Data '
                           +'Missing for '
                           +'EVS subseasonal"\n')
-                lmf.write(f'echo "Warning: No {obs.upper()} Analysis data '
+                lmf.write(f'echo "WARNING: No {obs.upper()} Analysis data '
                           +f'was available for '
                           +f'valid date {valid_dt:%Y%m%d%H}" > mailmsg\n')
             lmf.write(f'echo "Missing file is {missing_file}" >> mailmsg\n')
@@ -534,15 +534,8 @@ def prep_prod_gefs_file(source_afile, source_bfile, prepped_file, dest_file,
     """
     # Environment variables and executables
     WGRIB2 = os.environ['WGRIB2']
-    EXECevs = os.environ['EXECevs']
-    # Working file names
-    working_file1 = prepped_file+'.tmp1'
-    # Prep file
+    # Prep file and define the variables/levels for extraction
     if prep_method == 'full': 
-        if forecast_hour == 0:
-            wgrib_fhr = 'anl'
-        else:
-            wgrib_fhr = forecast_hour
         thin_var_level_list = [
             'HGT:500 mb',
             'ULWRF:top of atmosphere',
@@ -563,19 +556,25 @@ def prep_prod_gefs_file(source_afile, source_bfile, prepped_file, dest_file,
         
         if check_file_exists_size(source_afile) \
                 and check_file_exists_size(source_bfile):
-            run_shell_command(['>', prepped_file])
-            for thin_var_level in thin_var_level_list:
-                run_shell_command([WGRIB2, '-match', '"'+thin_var_level+'"',
-                                   source_afile+'|'+WGRIB2, '-i', 
-                                   source_afile,
-                                   '-grib', working_file1])
-                run_shell_command(['cat', working_file1, '>>', prepped_file])
-                run_shell_command([WGRIB2, '-match', '"'+thin_var_level+'"',
-                                   source_bfile+'|'+WGRIB2, '-i',
-                                   source_bfile,
-                                   '-grib', working_file1])
-                run_shell_command(['cat', working_file1, '>>', prepped_file])
-                os.remove(working_file1)
+            # Create a temporary pattern file for grep
+            pattern_file = f"{prepped_file}.patterns"
+            with open(pattern_file, 'w') as f:
+                f.write('\n'.join(thin_var_level_list) + '\n')
+            # Extract from source_afile
+            extract_a_cmd = (
+                f" 'grep -Ff {pattern_file} {source_afile}.idx | "
+                f"{WGRIB2} -i {source_afile} -grib {prepped_file}' "
+            )
+            run_shell_command(['sh', '-c', extract_a_cmd])
+            # Extract from source_bfile and APPEND
+            extract_b_cmd = (
+                f" 'grep -Ff {pattern_file} {source_bfile}.idx | "
+                f"{WGRIB2} -i {source_bfile} -append -grib {prepped_file}' "
+            )
+            run_shell_command(['sh', '-c', extract_b_cmd])
+            # Clean up the pattern file
+            if os.path.exists(pattern_file):
+                os.remove(pattern_file)
         else:
             log_missing_file_model(log_missing_file, source_afile,
                                    'gefs', init_dt,
@@ -1462,6 +1461,11 @@ def check_weekly_model_files(job_dict):
         job_dict['DATE']+job_dict['valid_hr_start'],
         '%Y%m%d%H'
     )
+    if job_dict['VERIF_TYPE'] == 'precip' and job_dict['WEEK'] == 'Week5':
+        valid_date_dt = datetime.datetime.strptime(
+            job_dict['PEDATE']+job_dict['valid_hr_start'],
+            '%Y%m%d%H'
+        )
     init_date_dt = datetime.datetime.strptime(
         job_dict['CORRECT_INIT_DATE']+job_dict['init_hr_start'],
         '%Y%m%d%H'
@@ -1482,14 +1486,15 @@ def check_weekly_model_files(job_dict):
             if job_dict['VERIF_CASE'] in ['grid2grid', 'grid2obs']:
                 if job_dict['VERIF_TYPE'] in ['seaice', 'sst', 
                                               'temp', 'prepbufr',
-                                              'pres_lvls'] \
+                                              'pres_lvls', 'precip'] \
                       and job_dict['job_name'] in ['Concentration',
                                                    'SST',
                                                    'TempAnom2m',
                                                    'GenEnsProd',
-                                                   'GeoHeightAnom']:
+                                                   'GeoHeightAnom',
+                                                   'Precip']:
                     mb = str(members).zfill(2)
-                    if job_dict['VERIF_TYPE'] == 'pres_lvls' \
+                    if job_dict['VERIF_TYPE'] in ['pres_lvls', 'precip'] \
                           and job_dict['MODEL'] == 'cfs':
                         input_file_format = os.path.join(verif_case_dir, 
                                                          'data',
@@ -1505,14 +1510,37 @@ def check_weekly_model_files(job_dict):
                                                          +'.{init?fmt=%Y%m%d%H}.'
                                                          +'f{lead?fmt=%3H}')
                     if job_dict['VERIF_CASE'] == 'grid2grid':
-                        output_JOB_file_format = os.path.join(
-                            job_dict['job_num_work_dir'],
-                            job_dict['RUN']+'.'+job_dict['DATE'],
-                            job_dict['MODEL'], job_dict['VERIF_CASE'],
-                            'grid_stat_'+job_dict['VERIF_TYPE']+'_'
-                            +job_dict['job_name']+'_{lead?fmt=%2H}'
-                            '0000L_{valid?fmt=%Y%m%d_%H%M%S}V_pairs.nc'
-                        )
+                        if job_dict['VERIF_TYPE'] == 'precip':
+                            output_JOB_file_format = os.path.join(
+                                job_dict['job_num_work_dir'],
+                                job_dict['RUN']+'.'+job_dict['DATE'],
+                                job_dict['MODEL'], job_dict['VERIF_CASE'],
+                                'weekly_pcp_combine_'
+                                +job_dict['VERIF_TYPE']+'_'
+                                +'Precip_init{init?fmt=%Y%m%d%H}'
+                                +'_valid{valid_shift?fmt=%Y%m%d%H?shift=-168}'
+                                +'to{valid?fmt=%Y%m%d%H}.nc'
+                            )
+                            if job_dict['WEEK'] == 'Week5':
+                                output_JOB_file_format = os.path.join(
+                                    job_dict['job_num_work_dir'],
+                                    job_dict['RUN']+'.'+job_dict['DATE'],
+                                    job_dict['MODEL'], job_dict['VERIF_CASE'],
+                                    'weekly_pcp_combine_'
+                                    +job_dict['VERIF_TYPE']+'_'
+                                    +'Precip_init{init?fmt=%Y%m%d%H}'
+                                    +'_valid{valid_shift?fmt=%Y%m%d%H?shift=-144}'
+                                    +'to{valid?fmt=%Y%m%d%H}.nc'
+                                )
+                        else:
+                            output_JOB_file_format = os.path.join(
+                                job_dict['job_num_work_dir'],
+                                job_dict['RUN']+'.'+job_dict['DATE'],
+                                job_dict['MODEL'], job_dict['VERIF_CASE'],
+                                'grid_stat_'+job_dict['VERIF_TYPE']+'_'
+                                +job_dict['job_name']+'_{lead?fmt=%2H}'
+                                '0000L_{valid?fmt=%Y%m%d_%H%M%S}V_pairs.nc'
+                            )
                     if job_dict['VERIF_CASE'] == 'grid2obs':
                         output_JOB_file_format = os.path.join(
                             job_dict['job_num_work_dir'],
@@ -1612,7 +1640,8 @@ def check_weekly_model_files(job_dict):
             elif job_dict['JOB_GROUP'] == 'reformat_data' \
                     and job_dict['job_name'] in ['Concentration',
                                                  'SST',
-                                                 'GenEnsProd']:
+                                                 'GenEnsProd',
+                                                 'Precip']:
                 if os.path.exists(fhr_fileN):
                     fhr_key_input_files_exist_list.append(True)
                     fhr_list.append(
@@ -1686,10 +1715,22 @@ def check_weekly_model_files(job_dict):
                         model_copy_output_list.append(
                             (fhr_fileN_JOB, fhr_fileN_COMOUT)
                         )
-    if len(input_fhr_list) >= 12:
-        model_files_exist = True
+    if job_dict['VERIF_TYPE'] == 'precip':
+        # Full set of files is required for PCPCombine
+        if len(input_fhr_list) == 28:
+            model_files_exist = True
+        else:
+            model_files_exist = False
+        if job_dict['WEEK'] == 'Week5':
+            if len(input_fhr_list) == 24:
+                model_files_exist = True
+            else:
+                model_files_exist = False
     else:
-        model_files_exist = False
+        if len(input_fhr_list) >= 12:
+            model_files_exist = True
+        else:
+            model_files_exist = False
     if len(fhr_list) == 0:
         model_files_exist = False
     return model_files_exist, fhr_list, model_copy_output_list
@@ -1879,12 +1920,13 @@ def check_days6_10_model_files(job_dict):
         if job_dict['JOB_GROUP'] == 'reformat_data':
             if job_dict['VERIF_CASE'] in ['grid2grid', 'grid2obs']:
                 if job_dict['VERIF_TYPE'] in ['temp', 'prepbufr',
-                                              'pres_lvls'] \
+                                              'pres_lvls', 'precip'] \
                       and job_dict['job_name'] in ['TempAnom2m',
                                                    'GenEnsProd',
-                                                   'GeoHeightAnom']:
+                                                   'GeoHeightAnom',
+                                                   'Precip']:
                     mb = str(members).zfill(2)
-                    if job_dict['VERIF_TYPE'] == 'pres_lvls' \
+                    if job_dict['VERIF_TYPE'] in ['pres_lvls', 'precip'] \
                           and job_dict['MODEL'] == 'cfs':
                         input_file_format = os.path.join(verif_case_dir,
                                                          'data',
@@ -1900,14 +1942,26 @@ def check_days6_10_model_files(job_dict):
                                                          +'.{init?fmt=%Y%m%d%H}.'
                                                          +'f{lead?fmt=%3H}')
                     if job_dict['VERIF_CASE'] == 'grid2grid':
-                        output_JOB_file_format = os.path.join(
-                            job_dict['job_num_work_dir'],
-                            job_dict['RUN']+'.'+job_dict['DATE'],
-                            job_dict['MODEL'], job_dict['VERIF_CASE'],
-                            'grid_stat_'+job_dict['VERIF_TYPE']+'_'
-                            +job_dict['job_name']+'_{lead?fmt=%2H}'
-                            '0000L_{valid?fmt=%Y%m%d_%H%M%S}V_pairs.nc'
-                        )
+                        if job_dict['VERIF_TYPE'] == 'precip':
+                            output_JOB_file_format = os.path.join(
+                                job_dict['job_num_work_dir'],
+                                job_dict['RUN']+'.'+job_dict['DATE'],
+                                job_dict['MODEL'], job_dict['VERIF_CASE'],
+                                'days6_10_pcp_combine_'
+                                +job_dict['VERIF_TYPE']+'_'
+                                +'Precip_init{init?fmt=%Y%m%d%H}'
+                                +'_valid{valid_shift?fmt=%Y%m%d%H?shift=-120}'
+                                +'to{valid?fmt=%Y%m%d%H}.nc'
+                            )
+                        else:
+                            output_JOB_file_format = os.path.join(
+                                job_dict['job_num_work_dir'],
+                                job_dict['RUN']+'.'+job_dict['DATE'],
+                                job_dict['MODEL'], job_dict['VERIF_CASE'],
+                                'grid_stat_'+job_dict['VERIF_TYPE']+'_'
+                                +job_dict['job_name']+'_{lead?fmt=%2H}'
+                                '0000L_{valid?fmt=%Y%m%d_%H%M%S}V_pairs.nc'
+                            )
                     if job_dict['VERIF_CASE'] == 'grid2obs':
                         output_JOB_file_format = os.path.join(
                             job_dict['job_num_work_dir'],
@@ -2005,7 +2059,8 @@ def check_days6_10_model_files(job_dict):
                 else:
                     fhr_key_input_files_exist_list.append(False)
             elif job_dict['JOB_GROUP'] == 'reformat_data' \
-                    and job_dict['job_name'] == 'GenEnsProd':
+                    and job_dict['job_name'] in ['GenEnsProd',
+                                                 'Precip']:
                 if os.path.exists(fhr_fileN):
                     fhr_key_input_files_exist_list.append(True)
                     fhr_list.append(
@@ -2079,10 +2134,17 @@ def check_days6_10_model_files(job_dict):
                         model_copy_output_list.append(
                             (fhr_fileN_JOB, fhr_fileN_COMOUT)
                         )
-    if len(input_fhr_list) >= 9:
-        model_files_exist = True
+    if job_dict['VERIF_TYPE'] == 'precip':
+        # Full set of files is required for PCPCombine
+        if len(input_fhr_list) == 20:
+            model_files_exist = True
+        else:
+            model_files_exist = False
     else:
-        model_files_exist = False
+        if len(input_fhr_list) >= 9:
+            model_files_exist = True
+        else:
+            model_files_exist = False
     if len(fhr_list) == 0:
         model_files_exist = False
     return model_files_exist, fhr_list, model_copy_output_list
@@ -2125,12 +2187,13 @@ def check_weeks3_4_model_files(job_dict):
         if job_dict['JOB_GROUP'] == 'reformat_data':
             if job_dict['VERIF_CASE'] in ['grid2grid', 'grid2obs']:
                 if job_dict['VERIF_TYPE'] in ['temp', 'prepbufr',
-                                              'pres_lvls'] \
+                                              'pres_lvls', 'precip'] \
                       and job_dict['job_name'] in ['TempAnom2m',
                                                    'GenEnsProd',
-                                                   'GeoHeightAnom']:
+                                                   'GeoHeightAnom',
+                                                   'Precip']:
                     mb = str(members).zfill(2)
-                    if job_dict['VERIF_TYPE'] == 'pres_lvls' \
+                    if job_dict['VERIF_TYPE'] in ['pres_lvls', 'precip'] \
                           and job_dict['MODEL'] == 'cfs':
                         input_file_format = os.path.join(verif_case_dir,
                                                          'data',
@@ -2146,14 +2209,26 @@ def check_weeks3_4_model_files(job_dict):
                                                          +'.{init?fmt=%Y%m%d%H}.'
                                                          +'f{lead?fmt=%3H}')
                     if job_dict['VERIF_CASE'] == 'grid2grid':
-                        output_JOB_file_format = os.path.join(
-                            job_dict['job_num_work_dir'],
-                            job_dict['RUN']+'.'+job_dict['DATE'],
-                            job_dict['MODEL'], job_dict['VERIF_CASE'],
-                            'grid_stat_'+job_dict['VERIF_TYPE']+'_'
-                            +job_dict['job_name']+'_{lead?fmt=%2H}'
-                            '0000L_{valid?fmt=%Y%m%d_%H%M%S}V_pairs.nc'
-                        )
+                        if job_dict['VERIF_TYPE'] == 'precip':
+                            output_JOB_file_format = os.path.join(
+                                job_dict['job_num_work_dir'],
+                                job_dict['RUN']+'.'+job_dict['DATE'],
+                                job_dict['MODEL'], job_dict['VERIF_CASE'],
+                                'weeks3_4_pcp_combine_'
+                                +job_dict['VERIF_TYPE']+'_'
+                                +'Precip_init{init?fmt=%Y%m%d%H}'
+                                +'_valid{valid_shift?fmt=%Y%m%d%H?shift=-336}'
+                                +'to{valid?fmt=%Y%m%d%H}.nc'
+                            )
+                        else:
+                            output_JOB_file_format = os.path.join(
+                                job_dict['job_num_work_dir'],
+                                job_dict['RUN']+'.'+job_dict['DATE'],
+                                job_dict['MODEL'], job_dict['VERIF_CASE'],
+                                'grid_stat_'+job_dict['VERIF_TYPE']+'_'
+                                +job_dict['job_name']+'_{lead?fmt=%2H}'
+                                '0000L_{valid?fmt=%Y%m%d_%H%M%S}V_pairs.nc'
+                            )
                     if job_dict['VERIF_CASE'] == 'grid2obs':
                         output_JOB_file_format = os.path.join(
                             job_dict['job_num_work_dir'],
@@ -2251,7 +2326,8 @@ def check_weeks3_4_model_files(job_dict):
                 else:
                     fhr_key_input_files_exist_list.append(False)
             elif job_dict['JOB_GROUP'] == 'reformat_data' \
-                    and job_dict['job_name'] == 'GenEnsProd':
+                    and job_dict['job_name'] in ['GenEnsProd',
+                                                 'Precip']:
                 if os.path.exists(fhr_fileN):
                     fhr_key_input_files_exist_list.append(True)
                     fhr_list.append(
@@ -2325,10 +2401,17 @@ def check_weeks3_4_model_files(job_dict):
                         model_copy_output_list.append(
                             (fhr_fileN_JOB, fhr_fileN_COMOUT)
                         )
-    if len(input_fhr_list) >= 23:
-        model_files_exist = True
+    if job_dict['VERIF_TYPE'] == 'precip':
+        # Full set of files is required for PCPCombine
+        if len(input_fhr_list) == 56:
+            model_files_exist = True
+        else:
+            model_files_exist = False
     else:
-        model_files_exist = False
+        if len(input_fhr_list) >= 23:
+            model_files_exist = True
+        else:
+            model_files_exist = False
     if len(fhr_list) == 0:
         model_files_exist = False
     return model_files_exist, fhr_list, model_copy_output_list
@@ -2352,6 +2435,12 @@ def check_model_files(job_dict):
         job_dict['DATE']+job_dict['valid_hr_start'],
         '%Y%m%d%H'
     )
+    if job_dict['VERIF_TYPE'] == 'precip' \
+            and job_dict['job_name'] == 'Week5_Precip':
+        valid_date_dt = datetime.datetime.strptime(
+            job_dict['PEDATE']+job_dict['valid_hr_start'],
+            '%Y%m%d%H'
+        )
     verif_case_dir = os.path.join(
         job_dict['DATA'], job_dict['VERIF_CASE']+'_'+job_dict['STEP']
     )
@@ -2360,6 +2449,8 @@ def check_model_files(job_dict):
     fhr_min = int(job_dict['fhr_start'])
     fhr_max = int(job_dict['fhr_end'])
     fhr_inc = 24
+    if job_dict['VERIF_TYPE'] == 'precip':
+        fhr_inc = 12
     fhr = fhr_min
     fhr_list = []
     fhr_check_input_dict = {}
@@ -2834,6 +2925,28 @@ def check_model_files(job_dict):
                         +'valid{valid_shift?fmt=%Y%m%d%H?shift=-168}'
                         +'to{valid?fmt=%Y%m%d%H}.nc'
                     )
+                elif job_dict['VERIF_TYPE'] == 'precip' \
+                        and job_dict['job_name'] == 'Weekly_Precip':
+                    input_file_format = os.path.join(
+                        verif_case_dir, 'METplus_output',
+                        job_dict['RUN']+'.'+job_dict['DATE'],
+                        model, job_dict['VERIF_CASE'], 'weekly_pcp_combine_'
+                        +job_dict['VERIF_TYPE']+'_Precip'
+                        +'_init{init?fmt=%Y%m%d%H}_'
+                        +'valid{valid_shift?fmt=%Y%m%d%H?shift=-168}'
+                        +'to{valid?fmt=%Y%m%d%H}.nc'
+                    )
+                elif job_dict['VERIF_TYPE'] == 'precip' \
+                        and job_dict['job_name'] == 'Week5_Precip':
+                    input_file_format = os.path.join(
+                        verif_case_dir, 'METplus_output',
+                        job_dict['RUN']+'.'+job_dict['DATE'],
+                        model, job_dict['VERIF_CASE'], 'weekly_pcp_combine_'
+                        +job_dict['VERIF_TYPE']+'_Precip'
+                        +'_init{init?fmt=%Y%m%d%H}_'
+                        +'valid{valid_shift?fmt=%Y%m%d%H?shift=-144}'
+                        +'to{valid?fmt=%Y%m%d%H}.nc'
+                    )
                 elif job_dict['VERIF_TYPE'] in ['pres_lvls', 'temp'] \
                         and job_dict['job_name'] in ['Days6_10Avg_GeoHeightAnom',
                                                      'Days6_10Avg_GeoHeight',
@@ -2848,6 +2961,17 @@ def check_model_files(job_dict):
                         +'valid{valid_shift?fmt=%Y%m%d%H?shift=-120}'
                         +'to{valid?fmt=%Y%m%d%H}.nc'
                     )
+                elif job_dict['VERIF_TYPE'] == 'precip' \
+                        and job_dict['job_name'] == 'Days6_10_Precip':
+                    input_file_format = os.path.join(
+                        verif_case_dir, 'METplus_output',
+                        job_dict['RUN']+'.'+job_dict['DATE'],
+                        model, job_dict['VERIF_CASE'], 'days6_10_pcp_combine_'
+                        +job_dict['VERIF_TYPE']+'_Precip'
+                        +'_init{init?fmt=%Y%m%d%H}_'
+                        +'valid{valid_shift?fmt=%Y%m%d%H?shift=-120}'
+                        +'to{valid?fmt=%Y%m%d%H}.nc'
+                    )
                 elif job_dict['VERIF_TYPE'] in ['pres_lvls', 'temp'] \
                         and job_dict['job_name'] in ['Weeks3_4Avg_GeoHeightAnom',
                                                      'Weeks3_4Avg_GeoHeight',
@@ -2858,6 +2982,17 @@ def check_model_files(job_dict):
                         job_dict['RUN']+'.'+job_dict['DATE'],
                         model, job_dict['VERIF_CASE'], 'weeks3_4_avg_'
                         +job_dict['VERIF_TYPE']+'_'+job_dict['job_name']
+                        +'_init{init?fmt=%Y%m%d%H}_'
+                        +'valid{valid_shift?fmt=%Y%m%d%H?shift=-336}'
+                        +'to{valid?fmt=%Y%m%d%H}.nc'
+                    )
+                elif job_dict['VERIF_TYPE'] == 'precip' \
+                        and job_dict['job_name'] == 'Weeks3_4_Precip':
+                    input_file_format = os.path.join(
+                        verif_case_dir, 'METplus_output',
+                        job_dict['RUN']+'.'+job_dict['DATE'],
+                        model, job_dict['VERIF_CASE'], 'weeks3_4_pcp_combine_'
+                        +job_dict['VERIF_TYPE']+'_Precip'
                         +'_init{init?fmt=%Y%m%d%H}_'
                         +'valid{valid_shift?fmt=%Y%m%d%H?shift=-336}'
                         +'to{valid?fmt=%Y%m%d%H}.nc'
@@ -2921,6 +3056,32 @@ def check_model_files(job_dict):
                             'init_date': init_date_dt,
                             'forecast_hour': str(fhr)
                         }
+                elif job_dict['VERIF_TYPE'] == 'precip' \
+                        and job_dict['job_name'] == 'Weekly_Precip':
+                    if str(fhr) in ['180', '348', '516', '684']:
+                        fhr_check_input_dict[str(fhr)]['file1'] = {
+                            'valid_date': valid_date_dt,
+                            'init_date': init_date_dt,
+                            'forecast_hour': str(fhr)
+                        }
+                        fhr_check_output_dict[str(fhr)]['file1'] = {
+                            'valid_date': valid_date_dt,
+                            'init_date': init_date_dt,
+                            'forecast_hour': str(fhr)
+                        }
+                elif job_dict['VERIF_TYPE'] == 'precip' \
+                        and job_dict['job_name'] == 'Week5_Precip':
+                    if fhr == 828:
+                        fhr_check_input_dict[str(fhr)]['file1'] = {
+                            'valid_date': valid_date_dt,
+                            'init_date': init_date_dt,
+                            'forecast_hour': str(fhr)
+                        }
+                        fhr_check_output_dict[str(fhr)]['file1'] = {
+                            'valid_date': valid_date_dt,
+                            'init_date': init_date_dt,
+                            'forecast_hour': str(fhr)
+                        }
                 elif job_dict['VERIF_TYPE'] in ['seaice', 'sst'] \
                         and job_dict['job_name'] in ['MonthlyAvg_Concentration',
                                                      'MonthlyAvg_SST']:
@@ -2951,12 +3112,38 @@ def check_model_files(job_dict):
                             'init_date': init_date_dt,
                             'forecast_hour': str(fhr)
                         }
+                elif job_dict['VERIF_TYPE'] == 'precip' \
+                        and job_dict['job_name'] == 'Days6_10_Precip':
+                    if fhr == 252:
+                        fhr_check_input_dict[str(fhr)]['file1'] = {
+                            'valid_date': valid_date_dt,
+                            'init_date': init_date_dt,
+                            'forecast_hour': str(fhr)
+                        }
+                        fhr_check_output_dict[str(fhr)]['file1'] = {
+                            'valid_date': valid_date_dt,
+                            'init_date': init_date_dt,
+                            'forecast_hour': str(fhr)
+                        }
                 elif job_dict['VERIF_TYPE'] in ['pres_lvls', 'temp'] \
                         and job_dict['job_name'] in ['Weeks3_4Avg_GeoHeightAnom',
                                                      'Weeks3_4Avg_GeoHeight',
                                                      'Weeks3_4Avg_TempAnom2m',
                                                      'Weeks3_4Avg_Temp2m']:
                     if fhr == 672:
+                        fhr_check_input_dict[str(fhr)]['file1'] = {
+                            'valid_date': valid_date_dt,
+                            'init_date': init_date_dt,
+                            'forecast_hour': str(fhr)
+                        }
+                        fhr_check_output_dict[str(fhr)]['file1'] = {
+                            'valid_date': valid_date_dt,
+                            'init_date': init_date_dt,
+                            'forecast_hour': str(fhr)
+                        }
+                elif job_dict['VERIF_TYPE'] == 'precip' \
+                        and job_dict['job_name'] == 'Weeks3_4_Precip':
+                    if fhr == 684:
                         fhr_check_input_dict[str(fhr)]['file1'] = {
                             'valid_date': valid_date_dt,
                             'init_date': init_date_dt,
@@ -3278,6 +3465,11 @@ def check_weekly_truth_files(job_dict):
         job_dict['DATE']+job_dict['valid_hr_start'],
         '%Y%m%d%H'
     )
+    if job_dict['VERIF_TYPE'] == 'precip' and job_dict['WEEK'] == 'Week5':
+        valid_date_dt = datetime.datetime.strptime(
+            job_dict['PEDATE']+job_dict['valid_hr_start'],
+            '%Y%m%d%H'
+        )
     verif_case_dir = os.path.join(
         job_dict['DATA'], job_dict['VERIF_CASE']+'_'+job_dict['STEP']
     )
@@ -3315,6 +3507,33 @@ def check_weekly_truth_files(job_dict):
                     )
                     truth_input_file_list.append(truth_file)
                     nf+=1
+            elif job_dict['VERIF_TYPE'] == 'precip':
+                truth_file_format = os.path.join(
+                    verif_case_dir, 'data', 'ccpa',
+                    '24hrCCPA.{valid?fmt=%Y%m%d%H}.nc'
+                )
+                if job_dict['WEEK'] == 'Week5':
+                    nf = 0
+                    while nf <= 5:
+                        truth_file = format_filler(
+                            truth_file_format,
+                            (valid_date_dt-datetime.timedelta(hours=24*nf)),
+                            (valid_date_dt-datetime.timedelta(hours=24*nf)),
+                            ['anl'], {}
+                        )
+                        truth_input_file_list.append(truth_file)
+                        nf+=1
+                else:
+                    nf = 0
+                    while nf <= 6:
+                        truth_file = format_filler(
+                            truth_file_format,
+                            (valid_date_dt-datetime.timedelta(hours=24*nf)),
+                            (valid_date_dt-datetime.timedelta(hours=24*nf)),
+                            ['anl'], {}
+                        )
+                        truth_input_file_list.append(truth_file)
+                        nf+=1
         elif job_dict['VERIF_CASE'] == 'grid2obs':
             if job_dict['VERIF_TYPE'] == 'prepbufr':
                 prepbufr_file_format = os.path.join(
@@ -3402,11 +3621,19 @@ def check_weekly_truth_files(job_dict):
                 truth_input_files_exist_list.append(True)
             else:
                 truth_input_files_exist_list.append(False)
-        if any(x == True for x in truth_input_files_exist_list) \
-                and truth_input_files_exist_list.count(True) >= 12:
-            truth_files_exist = True
+        if job_dict['VERIF_TYPE'] == 'precip':
+            # Full set of files is required for PCPCombine
+            if all(x == True for x in truth_input_files_exist_list) \
+                    and len(truth_input_files_exist_list) > 0:
+                truth_files_exist = True
+            else:
+                truth_files_exist = False
         else:
-            truth_files_exist = False
+            if any(x == True for x in truth_input_files_exist_list) \
+                    and truth_input_files_exist_list.count(True) >= 12:
+                truth_files_exist = True
+            else:
+                truth_files_exist = False
     return truth_files_exist, truth_copy_output_list
 
 def check_days6_10_truth_files(job_dict):
@@ -3462,6 +3689,21 @@ def check_days6_10_truth_files(job_dict):
                     )
                     truth_input_file_list.append(truth_file)
                     nf+=1
+            elif job_dict['VERIF_TYPE'] == 'precip':
+                truth_file_format = os.path.join(
+                    verif_case_dir, 'data', 'ccpa',
+                    '24hrCCPA.{valid?fmt=%Y%m%d%H}.nc'
+                )
+                nf = 0
+                while nf <= 4:
+                    truth_file = format_filler(
+                        truth_file_format,
+                        (valid_date_dt-datetime.timedelta(hours=24*nf)),
+                        (valid_date_dt-datetime.timedelta(hours=24*nf)),
+                        ['anl'], {}
+                    )
+                    truth_input_file_list.append(truth_file)
+                    nf+=1
         elif job_dict['VERIF_CASE'] == 'grid2obs':
             if job_dict['VERIF_TYPE'] == 'prepbufr':
                 prepbufr_file_format = os.path.join(
@@ -3549,11 +3791,19 @@ def check_days6_10_truth_files(job_dict):
                 truth_input_files_exist_list.append(True)
             else:
                 truth_input_files_exist_list.append(False)
-        if any(x == True for x in truth_input_files_exist_list) \
-                and truth_input_files_exist_list.count(True) >= 9:
-            truth_files_exist = True
+        if job_dict['VERIF_TYPE'] == 'precip':
+            # Full set of files is required for PCPCombine
+            if all(x == True for x in truth_input_files_exist_list) \
+                    and len(truth_input_files_exist_list) > 0:
+                truth_files_exist = True
+            else:
+                truth_files_exist = False
         else:
-            truth_files_exist = False
+            if any(x == True for x in truth_input_files_exist_list) \
+                    and truth_input_files_exist_list.count(True) >= 9:
+                truth_files_exist = True
+            else:
+                truth_files_exist = False
     return truth_files_exist, truth_copy_output_list
 
 def check_weeks3_4_truth_files(job_dict):
@@ -3606,6 +3856,21 @@ def check_weeks3_4_truth_files(job_dict):
                         truth_file_format,
                         (valid_date_dt-datetime.timedelta(hours=12*nf)),
                         (valid_date_dt-datetime.timedelta(hours=12*nf)),
+                        ['anl'], {}
+                    )
+                    truth_input_file_list.append(truth_file)
+                    nf+=1
+            elif job_dict['VERIF_TYPE'] == 'precip':
+                truth_file_format = os.path.join(
+                    verif_case_dir, 'data', 'ccpa',
+                    '24hrCCPA.{valid?fmt=%Y%m%d%H}.nc'
+                )
+                nf = 0
+                while nf <= 13:
+                    truth_file = format_filler(
+                        truth_file_format,
+                        (valid_date_dt-datetime.timedelta(hours=24*nf)),
+                        (valid_date_dt-datetime.timedelta(hours=24*nf)),
                         ['anl'], {}
                     )
                     truth_input_file_list.append(truth_file)
@@ -3727,11 +3992,19 @@ def check_weeks3_4_truth_files(job_dict):
             else:
                 truth_files_exist = False
         else:
-            if any(x == True for x in truth_input_files_exist_list) \
-                    and truth_input_files_exist_list.count(True) >= 23:
-                truth_files_exist = True
+            if job_dict['VERIF_TYPE'] == 'precip':
+                # Full set of files is required for PCPCombine
+                if all(x == True for x in truth_input_files_exist_list) \
+                        and len(truth_input_files_exist_list) > 0:
+                    truth_files_exist = True
+                else:
+                    truth_files_exist = False
             else:
-                truth_files_exist = False
+                if any(x == True for x in truth_input_files_exist_list) \
+                        and truth_input_files_exist_list.count(True) >= 23:
+                    truth_files_exist = True
+                else:
+                    truth_files_exist = False
     return truth_files_exist, truth_copy_output_list
 
 def check_truth_files(job_dict):
@@ -3748,9 +4021,16 @@ def check_truth_files(job_dict):
         job_dict['DATE']+job_dict['valid_hr_start'],
         '%Y%m%d%H'
     )
+    if job_dict['VERIF_TYPE'] == 'precip' \
+            and job_dict['job_name'] == 'Week5_Precip':
+        valid_date_dt = datetime.datetime.strptime(
+            job_dict['PEDATE']+job_dict['valid_hr_start'],
+            '%Y%m%d%H'
+        )
     verif_case_dir = os.path.join(
         job_dict['DATA'], job_dict['VERIF_CASE']+'_'+job_dict['STEP']
     )
+    model = job_dict['MODEL']
     truth_file_list = []
     if job_dict['JOB_GROUP'] == 'reformat_data':
         if job_dict['VERIF_CASE'] == 'grid2grid':
@@ -3842,6 +4122,74 @@ def check_truth_files(job_dict):
                     ['anl'], {}
                 )
                 truth_file_list.append(osi_saf_file)
+            elif job_dict['VERIF_TYPE'] == 'precip' \
+                    and job_dict['job_name'] == 'Weekly_Precip':
+                ccpa_file_format = os.path.join(
+                    verif_case_dir, 'METplus_output',
+                    job_dict['RUN']+'.'+job_dict['DATE'],
+                    model, job_dict['VERIF_CASE'], 'weekly_pcp_combine_'
+                    +job_dict['VERIF_TYPE']+'_CCPA'
+                    +'_valid{valid_shift?fmt=%Y%m%d%H?shift=-168}'
+                    +'to{valid?fmt=%Y%m%d%H}.nc'
+                )
+                ccpa_file = format_filler(
+                    ccpa_file_format,
+                    valid_date_dt,
+                    valid_date_dt,
+                    ['anl'], {}
+                )
+                truth_file_list.append(ccpa_file)
+            elif job_dict['VERIF_TYPE'] == 'precip' \
+                    and job_dict['job_name'] == 'Week5_Precip':
+                ccpa_file_format = os.path.join(
+                    verif_case_dir, 'METplus_output',
+                    job_dict['RUN']+'.'+job_dict['DATE'],
+                    model, job_dict['VERIF_CASE'], 'weekly_pcp_combine_'
+                    +job_dict['VERIF_TYPE']+'_CCPA'
+                    +'_valid{valid_shift?fmt=%Y%m%d%H?shift=-144}'
+                    +'to{valid?fmt=%Y%m%d%H}.nc'
+                )
+                ccpa_file = format_filler(
+                    ccpa_file_format,
+                    valid_date_dt,
+                    valid_date_dt,
+                    ['anl'], {}
+                )
+                truth_file_list.append(ccpa_file)
+            elif job_dict['VERIF_TYPE'] == 'precip' \
+                    and job_dict['job_name'] == 'Days6_10_Precip':
+                ccpa_file_format = os.path.join(
+                    verif_case_dir, 'METplus_output',
+                    job_dict['RUN']+'.'+job_dict['DATE'],
+                    model, job_dict['VERIF_CASE'], 'days6_10_pcp_combine_'
+                    +job_dict['VERIF_TYPE']+'_CCPA'
+                    +'_valid{valid_shift?fmt=%Y%m%d%H?shift=-120}'
+                    +'to{valid?fmt=%Y%m%d%H}.nc'
+                )
+                ccpa_file = format_filler(
+                    ccpa_file_format,
+                    valid_date_dt,
+                    valid_date_dt,
+                    ['anl'], {}
+                )
+                truth_file_list.append(ccpa_file)
+            elif job_dict['VERIF_TYPE'] == 'precip' \
+                    and job_dict['job_name'] == 'Weeks3_4_Precip':
+                ccpa_file_format = os.path.join(
+                    verif_case_dir, 'METplus_output',
+                    job_dict['RUN']+'.'+job_dict['DATE'],
+                    model, job_dict['VERIF_CASE'], 'weeks3_4_pcp_combine_'
+                    +job_dict['VERIF_TYPE']+'_CCPA'
+                    +'_valid{valid_shift?fmt=%Y%m%d%H?shift=-336}'
+                    +'to{valid?fmt=%Y%m%d%H}.nc'
+                )
+                ccpa_file = format_filler(
+                    ccpa_file_format,
+                    valid_date_dt,
+                    valid_date_dt,
+                    ['anl'], {}
+                )
+                truth_file_list.append(ccpa_file)
             elif job_dict['VERIF_TYPE'] == 'seaice' \
                     and job_dict['job_name'] == 'MonthlyAvg_Concentration':
                 osi_saf_file_format = os.path.join(
@@ -3976,6 +4324,9 @@ def get_obs_valid_hrs(obs):
         'BUFR': {'valid_hr_start': 00,
                  'valid_hr_end': 00,
                  'valid_hr_inc': 12},
+        'CCPA': {'valid_hr_start': 12,
+                 'valid_hr_end': 12,
+                 'valid_hr_inc': 24},
     }
     if obs in list(obs_valid_hr_dict.keys()):
         valid_hr_start = obs_valid_hr_dict[obs]['valid_hr_start']
@@ -4116,6 +4467,10 @@ def initialize_job_env_dict(verif_type, group,
             elif verif_type == 'pres_lvls':
                 valid_hr_start, valid_hr_end, valid_hr_inc = (
                     get_obs_valid_hrs('GFS')
+                )
+            elif verif_type == 'precip':
+                valid_hr_start, valid_hr_end, valid_hr_inc = (
+                    get_obs_valid_hrs('CCPA')
                 )
             elif verif_type == 'prepbufr':
                 valid_hr_start, valid_hr_end, valid_hr_inc = (

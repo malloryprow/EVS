@@ -1,34 +1,41 @@
 #!/usr/bin/env python3
-###############################################################################
-#
-# Name:          time_series.py
-# Contact(s):    Marcel Caron
-# Developed:     Oct. 14, 2021 by Marcel Caron 
-# Title:         Line plot of verification metric as a function of 
-#                valid or init time
-# Abstract:      Plots METplus output (e.g., BCRMSE) as a line plot, 
-#                varying by valid or init time, which represents the x-axis. 
-#                Line colors and styles are unique for each model, and several
-#                models can be plotted at once.
-#
-###############################################################################
+"""
+time_series.py
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov
+----------------------
+Plots verification metrics as a function of valid or init time for the cam component.
 
+Environment Variables (Inputs):
+    USH_DIR (for settings directory)
+
+Outputs:
+    - Generates line plots of verification metrics (e.g., BCRMSE) by valid or
+      init time for multiple models.
+
+This script is intended to be run as part of the cam component to automate
+plotting of verification metrics as a function of valid or init time.
+"""
+
+# Standard library imports
 import os
 import sys
-import numpy as np
 import math
-import pandas as pd
 import logging
+import shutil
 from functools import reduce
+from datetime import datetime, timedelta as td
+
+# Third-party imports
+import numpy as np
+import pandas as pd
 import matplotlib
 matplotlib.use('agg')
 import matplotlib.pyplot as plt
 import matplotlib.colors as colors
 import matplotlib.image as mpimg
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
-from datetime import datetime, timedelta as td
-import shutil
 
+# Local imports
 SETTINGS_DIR = os.environ['USH_DIR']
 sys.path.insert(0, os.path.abspath(SETTINGS_DIR))
 from settings import Toggle, Templates, Paths, Presets, ModelSpecs, Reference
@@ -92,6 +99,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         return None
 
     fig, ax = plotter.get_plots(num)  
+    verif_type_translator = reference.verif_type_translator
     variable_translator = reference.variable_translator
     domain_translator = reference.domain_translator
     model_settings = model_colors.model_settings
@@ -472,7 +480,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
     if (metric2_name and (pivot_metric1.empty or pivot_metric2.empty)):
         print_varname = df['FCST_VAR'].tolist()[0]
         logger.warning(
-            f"Could not find (and cannot plot) {metric1_name} and/or"
+            f"Could not find {metric1_name} and/or"
             + f" {metric2_name} stats for {print_varname} at any level. "
             + f"This often happens when processed data are all NaNs, "
             + f" which are removed.  Check for seasonal cases where critical "
@@ -484,7 +492,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
     elif not metric2_name and pivot_metric1.empty:
         print_varname = df['FCST_VAR'].tolist()[0]
         logger.warning(
-            f"Could not find (and cannot plot) {metric1_name}"
+            f"Could not find {metric1_name}"
             + f" stats for {print_varname} at any level. "
             + f"This often happens when processed data are all NaNs, "
             + f" which are removed.  Check for seasonal cases where critical "
@@ -1087,8 +1095,13 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             title2 = f'{level_string}{var_long_name} ({units}), {domain_string}'
         else:
             title2 = f'{level_string}{var_long_name} (unitless), {domain_string}'
+    if verif_type in verif_type_translator:
+        verif_type_long_name = verif_type_translator[verif_type]
+    else:
+        verif_type_long_name = verif_type
     title3 = (f'{str(date_type).capitalize()} {date_hours_string} '
-              + f'{date_start_string} to {date_end_string}, {frange_string}')
+              + f'{date_start_string} to {date_end_string}, {frange_string}, '
+              + f'Validation: {verif_type_long_name}')
     title_center = '\n'.join([title1, title2, title3])
     if sample_equalization:
         title_pad=23

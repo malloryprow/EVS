@@ -1,21 +1,33 @@
 #!/usr/bin/env python3
-# =============================================================================
-#
-# NAME: cam_precip_create_job_scripts.py
-# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Loads graphics definitions dictionary and feeds each set of configs
-#          to cam_plots_precip_create_job_script.py to write the job card
-#
-# =============================================================================
+"""
+cam_plots_precip_create_job_scripts.py
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov
+----------------------
+Loads the graphics definitions dictionary and feeds each set of configurations
+to cam_plots_precip_create_job_script.py to write job cards for the cam
+component.
+
+Environment Variables (Inputs):
+        USH_DIR, USHevs, COMPONENT, STEP, VERIF_CASE, njob, EVAL_PERIOD, and
+        others required for job card creation and plotting configuration.
+
+Outputs:
+        - Iterates over all plotting configurations and generates job cards for
+            Precip plots.
+        - Prints errors and exits if required environment variables or settings are
+            missing or invalid.
+
+This script is intended to be run as part of the cam component to automate
+creation of all Precip plotting job cards.
+"""
 
 import os
 import sys
-from pathlib import Path
 
 USH_DIR = os.environ['USH_DIR']
 sys.path.insert(0, os.path.abspath(USH_DIR))
-from cam_plots_precip_last31days_graphx_defs import graphics as graphics31
 from cam_plots_precip_last90days_graphx_defs import graphics as graphics90
+from cam_plots_precip_last31days_graphx_defs import graphics as graphics31
 import cam_util as cutil
 
 USHevs = os.environ['USHevs']
@@ -24,10 +36,10 @@ STEP = os.environ['STEP']
 VERIF_CASE = os.environ['VERIF_CASE']
 njob = os.environ['njob']
 eval_period = os.environ['EVAL_PERIOD']
-if eval_period == "last31days":
-    graphics = graphics31
-elif eval_period == "last90days":
+if eval_period == "last90days":
     graphics = graphics90
+elif eval_period == "last31days":
+    graphics = graphics31
 else:
     raise ValueError(f"Invalid environment variable \"EVAL_PERIOD\": {os.environ['EVAL_PERIOD']}")
     sys.exit(1)

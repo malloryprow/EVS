@@ -3,7 +3,7 @@
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=00:15:00
+#PBS -l walltime=03:00:00
 #PBS -l place=vscatter,select=1:ncpus=36:mem=50G
 #PBS -l debug=true
 
@@ -42,7 +42,7 @@ export envir=prod
 export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-NO}
-export KEEPDATA=${KEEPDATA:-YES}
+export KEEPDATA=${KEEPDATA:-NO}
 
 ## developers directories
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp

@@ -31,6 +31,7 @@ from datetime import datetime, timedelta as td
 
 
 SETTINGS_DIR = os.environ['USH_DIR']
+valid_src = os.environ['obsv']
 sys.path.insert(0, os.path.abspath(SETTINGS_DIR))
 from settings import Toggle, Templates, Paths, Presets, ModelSpecs, Reference
 from plotter import Plotter
@@ -505,7 +506,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     if pivot_metric1.empty or pivot_metric2.empty:
         print_varname = df['FCST_VAR'].tolist()[0]
         logger.warning(
-            f"Could not find (and cannot plot) {metric1_name} and/or"
+            f"Could not find {metric1_name} and/or"
             + f" {metric2_name} stats for {print_varname} at any threshold. "
         )
         logger.warning(
@@ -923,6 +924,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         title2 = (f'{level_string}{var_long_name} (unitless), {domain_string}')
     else:
         title2 = (f'{level_string}{var_long_name} ({units}), {domain_string}')
+    title2 += f'{valid_src}'
     title3 = (f'{str(date_type).capitalize()} {date_hours_string} '
               + f'{date_start_string} to {date_end_string}, {frange_string}')
     title_center = '\n'.join([title1, title2, title3])
@@ -933,9 +935,9 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     if plot_logo_left:
         if os.path.exists(path_logo_left):
             left_logo_arr = mpimg.imread(path_logo_left)
-            left_image_box = OffsetImage(left_logo_arr, zoom=zoom_logo_left*.8)
+            left_image_box = OffsetImage(left_logo_arr, zoom=zoom_logo_left*1.)
             ab_left = AnnotationBbox(
-                left_image_box, xy=(0.,1.), xycoords='axes fraction',
+                left_image_box, xy=(0.,1.07), xycoords='axes fraction',
                 xybox=(0, 3), boxcoords='offset points', frameon = False,
                 box_alignment=(0,0)
             )
@@ -948,9 +950,9 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     if plot_logo_right:
         if os.path.exists(path_logo_right):
             right_logo_arr = mpimg.imread(path_logo_right)
-            right_image_box = OffsetImage(right_logo_arr, zoom=zoom_logo_right*.8)
+            right_image_box = OffsetImage(right_logo_arr, zoom=zoom_logo_right*1.)
             ab_right = AnnotationBbox(
-                right_image_box, xy=(1.,1.), xycoords='axes fraction',
+                right_image_box, xy=(1.,1.07), xycoords='axes fraction',
                 xybox=(0, 3), boxcoords='offset points', frameon = False,
                 box_alignment=(1,0)
             )

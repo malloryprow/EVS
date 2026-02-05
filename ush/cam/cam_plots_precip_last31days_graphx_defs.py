@@ -1,14 +1,25 @@
 #!/usr/bin/env python3
-# =============================================================================
-#
-# NAME: cam_plots_precip_graphx_defs.py
-# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Graphics definitions for the CAM Precip Plots jobs
-#
-# =============================================================================
+"""
+cam_plots_precip_last31days_graphx_defs.py
+CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+----------------------
+Graphics definitions for the CAM Precip Plots jobs (last 31 days), used by the
+cam component for precipitation plotting and job configuration.
+
+Environment Variables (Inputs):
+    EVAL_PERIOD (used within graphics definitions)
+
+Outputs:
+    - Provides the 'graphics' dictionary for CAM Precip plotting jobs (last 31 days).
+
+This module is intended to be imported and used as part of the cam component's
+plotting and job generation workflow for precipitation plots (last 31 days).
+"""
 
 import os
-from datetime import datetime, timedelta as td
+from datetime import datetime
+from datetime import timedelta as td
+
 graphics = {
     'cam':{
         'precip':{
@@ -76,7 +87,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                                 'APCP_03':{
                                     'FCST_VALID_HOURS':[''],
@@ -89,7 +100,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4,>=50.8'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                                 'APCP_24':{
                                     'FCST_VALID_HOURS':[''],
@@ -102,7 +113,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -159,32 +170,6 @@ graphics = {
                             }
                         }
                     },
-                    'spatial_map':{
-                        'DATE_TYPE':'VALID',
-                        'VALID_BEG':'',
-                        'VALID_END': (datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)).strftime('%Y%m%d'),
-                        'INIT_BEG':'',
-                        'INIT_END':'',
-                        'VX_MASK_LIST':'CONUS',
-                        'EVAL_PERIODS':['NA'],
-                        'VARIABLES':{
-                            'NA':{
-                                'APCP_24':{
-                                    'FCST_VALID_HOURS':['12'],
-                                    'FCST_INIT_HOURS':[''],
-                                    'STATSs':[''],
-                                    'FCST_LEADS':['24','30','36','42','48'],
-                                    'FCST_LEVEL':'A24',
-                                    'OBS_LEVEL':'A24',
-                                    'FCST_THRESHs':[''],
-                                    'OBS_THRESHs':[''],
-                                    'CONFIDENCE_INTERVALS':'False',
-                                    'INTERP':'None',
-                                    'INTERP_PNTSs':[''],
-                                },
-                            }
-                        }
-                    },
                 },
                 'domain_group1, fhr_group2, init_group1, namnest, hireswfv3':{
                     'threshold_average':{
@@ -236,7 +221,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4,>=50.8'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                                 'APCP_24':{
                                     'FCST_VALID_HOURS':[''],
@@ -249,7 +234,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -293,32 +278,6 @@ graphics = {
                             }
                         }
                     },
-                    'spatial_map':{
-                        'DATE_TYPE':'VALID',
-                        'VALID_BEG':'',
-                        'VALID_END': (datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)).strftime('%Y%m%d'),
-                        'INIT_BEG':'',
-                        'INIT_END':'',
-                        'VX_MASK_LIST':'CONUS',
-                        'EVAL_PERIODS':['NA'],
-                        'VARIABLES':{
-                            'NA':{
-                                'APCP_24':{
-                                    'FCST_VALID_HOURS':['12'],
-                                    'FCST_INIT_HOURS':[''],
-                                    'STATSs':[''],
-                                    'FCST_LEADS':['54','60'],
-                                    'FCST_LEVEL':'A24',
-                                    'OBS_LEVEL':'A24',
-                                    'FCST_THRESHs':[''],
-                                    'OBS_THRESHs':[''],
-                                    'CONFIDENCE_INTERVALS':'False',
-                                    'INTERP':'None',
-                                    'INTERP_PNTSs':[''],
-                                },
-                            }
-                        }
-                    },
                 },
                 'domain_group1, fhr_group1, init_group2, namnest, hrrr':{
                     'threshold_average':{
@@ -357,7 +316,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -383,32 +342,6 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NEAREST',
-                                    'INTERP_PNTSs':[''],
-                                },
-                            }
-                        }
-                    },
-                    'spatial_map':{
-                        'DATE_TYPE':'VALID',
-                        'VALID_BEG':'',
-                        'VALID_END': (datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)).strftime('%Y%m%d'),
-                        'INIT_BEG':'',
-                        'INIT_END':'',
-                        'VX_MASK_LIST':'CONUS',
-                        'EVAL_PERIODS':['NA'],
-                        'VARIABLES':{
-                            'NA':{
-                                'APCP_24':{
-                                    'FCST_VALID_HOURS':['12'],
-                                    'FCST_INIT_HOURS':[''],
-                                    'STATSs':[''],
-                                    'FCST_LEADS':['24','30','36','42','48'],
-                                    'FCST_LEVEL':'A24',
-                                    'OBS_LEVEL':'A24',
-                                    'FCST_THRESHs':[''],
-                                    'OBS_THRESHs':[''],
-                                    'CONFIDENCE_INTERVALS':'False',
-                                    'INTERP':'None',
                                     'INTERP_PNTSs':[''],
                                 },
                             }
@@ -452,7 +385,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -478,32 +411,6 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NEAREST',
-                                    'INTERP_PNTSs':[''],
-                                },
-                            }
-                        }
-                    },
-                    'spatial_map':{
-                        'DATE_TYPE':'VALID',
-                        'VALID_BEG':'',
-                        'VALID_END': (datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)).strftime('%Y%m%d'),
-                        'INIT_BEG':'',
-                        'INIT_END':'',
-                        'VX_MASK_LIST':'CONUS',
-                        'EVAL_PERIODS':['NA'],
-                        'VARIABLES':{
-                            'NA':{
-                                'APCP_24':{
-                                    'FCST_VALID_HOURS':['12'],
-                                    'FCST_INIT_HOURS':[''],
-                                    'STATSs':[''],
-                                    'FCST_LEADS':['54','60'],
-                                    'FCST_LEVEL':'A24',
-                                    'OBS_LEVEL':'A24',
-                                    'FCST_THRESHs':[''],
-                                    'OBS_THRESHs':[''],
-                                    'CONFIDENCE_INTERVALS':'False',
-                                    'INTERP':'None',
                                     'INTERP_PNTSs':[''],
                                 },
                             }
@@ -573,7 +480,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                                 'APCP_03':{
                                     'FCST_VALID_HOURS':[''],
@@ -586,7 +493,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4,>=50.8'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                                 'APCP_24':{
                                     'FCST_VALID_HOURS':[''],
@@ -599,7 +506,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -707,7 +614,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4,>=50.8'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                                 'APCP_24':{
                                     'FCST_VALID_HOURS':[''],
@@ -720,7 +627,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -802,7 +709,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -871,7 +778,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -966,7 +873,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                                 'APCP_03':{
                                     'FCST_VALID_HOURS':[''],
@@ -979,7 +886,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4,>=50.8'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                                 'APCP_24':{
                                     'FCST_VALID_HOURS':[''],
@@ -992,7 +899,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -1100,7 +1007,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4,>=50.8'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                                 'APCP_24':{
                                     'FCST_VALID_HOURS':[''],
@@ -1113,7 +1020,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -1195,7 +1102,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -1264,7 +1171,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -1359,7 +1266,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                                 'APCP_03':{
                                     'FCST_VALID_HOURS':[''],
@@ -1372,7 +1279,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4,>=50.8'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                                 'APCP_24':{
                                     'FCST_VALID_HOURS':[''],
@@ -1385,7 +1292,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -1493,7 +1400,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4,>=50.8'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                                 'APCP_24':{
                                     'FCST_VALID_HOURS':[''],
@@ -1506,7 +1413,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -1588,7 +1495,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -1657,7 +1564,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -1752,7 +1659,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                                 'APCP_03':{
                                     'FCST_VALID_HOURS':[''],
@@ -1765,7 +1672,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4,>=50.8'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                                 'APCP_24':{
                                     'FCST_VALID_HOURS':[''],
@@ -1778,7 +1685,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -1886,7 +1793,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4,>=50.8'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                                 'APCP_24':{
                                     'FCST_VALID_HOURS':[''],
@@ -1899,7 +1806,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -1981,7 +1888,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -2050,7 +1957,7 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -2101,7 +2008,7 @@ graphics = {
                                     'STATSs':['fbias','ets'],
                                     'FCST_LEADS':['1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24'],
                                     'FCST_LEVEL':'A1',
-                                    'OBS_LEVEL':'A1',
+                                    'OBS_LEVEL':'Z0',
                                     'FCST_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4'],
                                     'OBS_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4'],
                                     'CONFIDENCE_INTERVALS':'False',
@@ -2114,7 +2021,7 @@ graphics = {
                                     'STATSs':['fbias','ets'],
                                     'FCST_LEADS':['3,6,9,12,15,18,21,24','15,18,21,24,27,30,33,36','27,30,33,36,39,42,45,48'],
                                     'FCST_LEVEL':'A3',
-                                    'OBS_LEVEL':'A3',
+                                    'OBS_LEVEL':'Z0',
                                     'FCST_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4,>=50.8'],
                                     'OBS_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4,>=50.8'],
                                     'CONFIDENCE_INTERVALS':'False',
@@ -2127,7 +2034,7 @@ graphics = {
                                     'STATSs':['fbias','ets'],
                                     'FCST_LEADS':['24','30','36','42','48'],
                                     'FCST_LEVEL':'A24',
-                                    'OBS_LEVEL':'A24',
+                                    'OBS_LEVEL':'Z0',
                                     'FCST_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
@@ -2142,12 +2049,12 @@ graphics = {
                                     'STATSs':['fss'],
                                     'FCST_LEADS':['1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24'],
                                     'FCST_LEVEL':'A1',
-                                    'OBS_LEVEL':'A1',
+                                    'OBS_LEVEL':'Z0',
                                     'FCST_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4'],
                                     'OBS_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                                 'APCP_03':{
                                     'FCST_VALID_HOURS':[''],
@@ -2155,12 +2062,12 @@ graphics = {
                                     'STATSs':['fss'],
                                     'FCST_LEADS':['3,6,9,12,15,18,21,24','15,18,21,24,27,30,33,36','27,30,33,36,39,42,45,48'],
                                     'FCST_LEVEL':'A3',
-                                    'OBS_LEVEL':'A3',
+                                    'OBS_LEVEL':'Z0',
                                     'FCST_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4,>=50.8'],
                                     'OBS_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4,>=50.8'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                                 'APCP_24':{
                                     'FCST_VALID_HOURS':[''],
@@ -2168,12 +2075,12 @@ graphics = {
                                     'STATSs':['fss'],
                                     'FCST_LEADS':['24','30','36','42','48'],
                                     'FCST_LEVEL':'A24',
-                                    'OBS_LEVEL':'A24',
+                                    'OBS_LEVEL':'Z0',
                                     'FCST_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -2194,7 +2101,7 @@ graphics = {
                                     'STATSs':['sratio,pod,csi'],
                                     'FCST_LEADS':['1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24'],
                                     'FCST_LEVEL':'A1',
-                                    'OBS_LEVEL':'A1',
+                                    'OBS_LEVEL':'Z0',
                                     'FCST_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4'],
                                     'OBS_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4'],
                                     'CONFIDENCE_INTERVALS':'False',
@@ -2207,7 +2114,7 @@ graphics = {
                                     'STATSs':['sratio,pod,csi'],
                                     'FCST_LEADS':['3,6,9,12,15,18,21,24','15,18,21,24,27,30,33,36','27,30,33,36,39,42,45,48'],
                                     'FCST_LEVEL':'A3',
-                                    'OBS_LEVEL':'A3',
+                                    'OBS_LEVEL':'Z0',
                                     'FCST_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4,>=50.8'],
                                     'OBS_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4,>=50.8'],
                                     'CONFIDENCE_INTERVALS':'False',
@@ -2220,37 +2127,11 @@ graphics = {
                                     'STATSs':['sratio,pod,csi'],
                                     'FCST_LEADS':['24','30','36','42','48'],
                                     'FCST_LEVEL':'A24',
-                                    'OBS_LEVEL':'A24',
+                                    'OBS_LEVEL':'Z0',
                                     'FCST_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NEAREST',
-                                    'INTERP_PNTSs':[''],
-                                },
-                            }
-                        }
-                    },
-                    'spatial_map':{
-                        'DATE_TYPE':'VALID',
-                        'VALID_BEG':'',
-                        'VALID_END': (datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)).strftime('%Y%m%d'),
-                        'INIT_BEG':'',
-                        'INIT_END':'',
-                        'VX_MASK_LIST':'Alaska',
-                        'EVAL_PERIODS':['NA'],
-                        'VARIABLES':{
-                            'NA':{
-                                'APCP_24':{
-                                    'FCST_VALID_HOURS':['12'],
-                                    'FCST_INIT_HOURS':[''],
-                                    'STATSs':[''],
-                                    'FCST_LEADS':['24','36','48'],
-                                    'FCST_LEVEL':'A24',
-                                    'OBS_LEVEL':'A24',
-                                    'FCST_THRESHs':[''],
-                                    'OBS_THRESHs':[''],
-                                    'CONFIDENCE_INTERVALS':'False',
-                                    'INTERP':'None',
                                     'INTERP_PNTSs':[''],
                                 },
                             }
@@ -2274,7 +2155,7 @@ graphics = {
                                     'STATSs':['fbias','ets'],
                                     'FCST_LEADS':['39,42,45,48,51,54,57,60'],
                                     'FCST_LEVEL':'A3',
-                                    'OBS_LEVEL':'A3',
+                                    'OBS_LEVEL':'Z0',
                                     'FCST_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4,>=50.8'],
                                     'OBS_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4,>=50.8'],
                                     'CONFIDENCE_INTERVALS':'False',
@@ -2287,7 +2168,7 @@ graphics = {
                                     'STATSs':['fbias','ets'],
                                     'FCST_LEADS':['54','60'],
                                     'FCST_LEVEL':'A24',
-                                    'OBS_LEVEL':'A24',
+                                    'OBS_LEVEL':'Z0',
                                     'FCST_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
@@ -2302,12 +2183,12 @@ graphics = {
                                     'STATSs':['fss'],
                                     'FCST_LEADS':['39,42,45,48,51,54,57,60'],
                                     'FCST_LEVEL':'A3',
-                                    'OBS_LEVEL':'A3',
+                                    'OBS_LEVEL':'Z0',
                                     'FCST_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4,>=50.8'],
                                     'OBS_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4,>=50.8'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                                 'APCP_24':{
                                     'FCST_VALID_HOURS':[''],
@@ -2315,12 +2196,12 @@ graphics = {
                                     'STATSs':['fss'],
                                     'FCST_LEADS':['54','60'],
                                     'FCST_LEVEL':'A24',
-                                    'OBS_LEVEL':'A24',
+                                    'OBS_LEVEL':'Z0',
                                     'FCST_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -2341,7 +2222,7 @@ graphics = {
                                     'STATSs':['sratio,pod,csi'],
                                     'FCST_LEADS':['39,42,45,48,51,54,57,60'],
                                     'FCST_LEVEL':'A3',
-                                    'OBS_LEVEL':'A3',
+                                    'OBS_LEVEL':'Z0',
                                     'FCST_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4,>=50.8'],
                                     'OBS_THRESHs':['>=0.254,>=1.27,>=2.54,>=6.35,>=12.7,>=19.05,>=25.4,>=50.8'],
                                     'CONFIDENCE_INTERVALS':'False',
@@ -2354,37 +2235,11 @@ graphics = {
                                     'STATSs':['sratio,pod,csi'],
                                     'FCST_LEADS':['54','60'],
                                     'FCST_LEVEL':'A24',
-                                    'OBS_LEVEL':'A24',
+                                    'OBS_LEVEL':'Z0',
                                     'FCST_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NEAREST',
-                                    'INTERP_PNTSs':[''],
-                                },
-                            }
-                        }
-                    },
-                    'spatial_map':{
-                        'DATE_TYPE':'VALID',
-                        'VALID_BEG':'',
-                        'VALID_END': (datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)).strftime('%Y%m%d'),
-                        'INIT_BEG':'',
-                        'INIT_END':'',
-                        'VX_MASK_LIST':'Alaska',
-                        'EVAL_PERIODS':['NA'],
-                        'VARIABLES':{
-                            'NA':{
-                                'APCP_24':{
-                                    'FCST_VALID_HOURS':['12'],
-                                    'FCST_INIT_HOURS':[''],
-                                    'STATSs':[''],
-                                    'FCST_LEADS':['60'],
-                                    'FCST_LEVEL':'A24',
-                                    'OBS_LEVEL':'A24',
-                                    'FCST_THRESHs':[''],
-                                    'OBS_THRESHs':[''],
-                                    'CONFIDENCE_INTERVALS':'False',
-                                    'INTERP':'None',
                                     'INTERP_PNTSs':[''],
                                 },
                             }
@@ -2408,7 +2263,7 @@ graphics = {
                                     'STATSs':['fbias','ets'],
                                     'FCST_LEADS':['24','30','36','42','48'],
                                     'FCST_LEVEL':'A24',
-                                    'OBS_LEVEL':'A24',
+                                    'OBS_LEVEL':'Z0',
                                     'FCST_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
@@ -2423,12 +2278,12 @@ graphics = {
                                     'STATSs':['fss'],
                                     'FCST_LEADS':['24','30','36','42','48'],
                                     'FCST_LEVEL':'A24',
-                                    'OBS_LEVEL':'A24',
+                                    'OBS_LEVEL':'Z0',
                                     'FCST_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -2449,37 +2304,11 @@ graphics = {
                                     'STATSs':['sratio,pod,csi'],
                                     'FCST_LEADS':['24','30','36','42','48'],
                                     'FCST_LEVEL':'A24',
-                                    'OBS_LEVEL':'A24',
+                                    'OBS_LEVEL':'Z0',
                                     'FCST_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NEAREST',
-                                    'INTERP_PNTSs':[''],
-                                },
-                            }
-                        }
-                    },
-                    'spatial_map':{
-                        'DATE_TYPE':'VALID',
-                        'VALID_BEG':'',
-                        'VALID_END': (datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)).strftime('%Y%m%d'),
-                        'INIT_BEG':'',
-                        'INIT_END':'',
-                        'VX_MASK_LIST':'Alaska',
-                        'EVAL_PERIODS':['NA'],
-                        'VARIABLES':{
-                            'NA':{
-                                'APCP_24':{
-                                    'FCST_VALID_HOURS':['12'],
-                                    'FCST_INIT_HOURS':[''],
-                                    'STATSs':[''],
-                                    'FCST_LEADS':['30','42'],
-                                    'FCST_LEVEL':'A24',
-                                    'OBS_LEVEL':'A24',
-                                    'FCST_THRESHs':[''],
-                                    'OBS_THRESHs':[''],
-                                    'CONFIDENCE_INTERVALS':'False',
-                                    'INTERP':'None',
                                     'INTERP_PNTSs':[''],
                                 },
                             }
@@ -2503,7 +2332,7 @@ graphics = {
                                     'STATSs':['fbias','ets'],
                                     'FCST_LEADS':['54','60'],
                                     'FCST_LEVEL':'A24',
-                                    'OBS_LEVEL':'A24',
+                                    'OBS_LEVEL':'Z0',
                                     'FCST_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
@@ -2518,12 +2347,12 @@ graphics = {
                                     'STATSs':['fss'],
                                     'FCST_LEADS':['54','60'],
                                     'FCST_LEVEL':'A24',
-                                    'OBS_LEVEL':'A24',
+                                    'OBS_LEVEL':'Z0',
                                     'FCST_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1'],
                                 },
                             },
                         }
@@ -2544,7 +2373,7 @@ graphics = {
                                     'STATSs':['sratio,pod,csi'],
                                     'FCST_LEADS':['54','60'],
                                     'FCST_LEVEL':'A24',
-                                    'OBS_LEVEL':'A24',
+                                    'OBS_LEVEL':'Z0',
                                     'FCST_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'False',
@@ -2554,257 +2383,7 @@ graphics = {
                             }
                         }
                     },
-                    'spatial_map':{
-                        'DATE_TYPE':'VALID',
-                        'VALID_BEG':'',
-                        'VALID_END': (datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)).strftime('%Y%m%d'),
-                        'INIT_BEG':'',
-                        'INIT_END':'',
-                        'VX_MASK_LIST':'Alaska',
-                        'EVAL_PERIODS':['NA'],
-                        'VARIABLES':{
-                            'NA':{
-                                'APCP_24':{
-                                    'FCST_VALID_HOURS':['12'],
-                                    'FCST_INIT_HOURS':[''],
-                                    'STATSs':[''],
-                                    'FCST_LEADS':['54'],
-                                    'FCST_LEVEL':'A24',
-                                    'OBS_LEVEL':'A24',
-                                    'FCST_THRESHs':[''],
-                                    'OBS_THRESHs':[''],
-                                    'CONFIDENCE_INTERVALS':'False',
-                                    'INTERP':'None',
-                                    'INTERP_PNTSs':[''],
-                                },
-                            }
-                        }
-                    },
                 },
-                'domain_group2, fhr_group1, init_group1, namnest':{
-                    'spatial_map':{
-                        'DATE_TYPE':'VALID',
-                        'VALID_BEG':'',
-                        'VALID_END': (datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)).strftime('%Y%m%d'),
-                        'INIT_BEG':'',
-                        'INIT_END':'',
-                        'VX_MASK_LIST':'PuertoRico',
-                        'EVAL_PERIODS':['NA'],
-                        'VARIABLES':{
-                            'NA':{
-                                'APCP_24':{
-                                    'FCST_VALID_HOURS':['12'],
-                                    'FCST_INIT_HOURS':[''],
-                                    'STATSs':[''],
-                                    'FCST_LEADS':['24','36','48'],
-                                    'FCST_LEVEL':'A24',
-                                    'OBS_LEVEL':'A24',
-                                    'FCST_THRESHs':[''],
-                                    'OBS_THRESHs':[''],
-                                    'CONFIDENCE_INTERVALS':'False',
-                                    'INTERP':'None',
-                                    'INTERP_PNTSs':[''],
-                                },
-                            }
-                        }
-                    },
-                },
-                'domain_group2, fhr_group2, init_group1, namnest':{
-                    'spatial_map':{
-                        'DATE_TYPE':'VALID',
-                        'VALID_BEG':'',
-                        'VALID_END': (datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)).strftime('%Y%m%d'),
-                        'INIT_BEG':'',
-                        'INIT_END':'',
-                        'VX_MASK_LIST':'PuertoRico',
-                        'EVAL_PERIODS':['NA'],
-                        'VARIABLES':{
-                            'NA':{
-                                'APCP_24':{
-                                    'FCST_VALID_HOURS':['12'],
-                                    'FCST_INIT_HOURS':[''],
-                                    'STATSs':[''],
-                                    'FCST_LEADS':['60'],
-                                    'FCST_LEVEL':'A24',
-                                    'OBS_LEVEL':'A24',
-                                    'FCST_THRESHs':[''],
-                                    'OBS_THRESHs':[''],
-                                    'CONFIDENCE_INTERVALS':'False',
-                                    'INTERP':'None',
-                                    'INTERP_PNTSs':[''],
-                                },
-                            }
-                        }
-                    },
-                },
-                'domain_group2, fhr_group1, init_group2, namnest, hireswarw, hireswarwmem2, hireswfv3':{
-                    'spatial_map':{
-                        'DATE_TYPE':'VALID',
-                        'VALID_BEG':'',
-                        'VALID_END': (datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)).strftime('%Y%m%d'),
-                        'INIT_BEG':'',
-                        'INIT_END':'',
-                        'VX_MASK_LIST':'PuertoRico',
-                        'EVAL_PERIODS':['NA'],
-                        'VARIABLES':{
-                            'NA':{
-                                'APCP_24':{
-                                    'FCST_VALID_HOURS':['12'],
-                                    'FCST_INIT_HOURS':[''],
-                                    'STATSs':[''],
-                                    'FCST_LEADS':['30','42'],
-                                    'FCST_LEVEL':'A24',
-                                    'OBS_LEVEL':'A24',
-                                    'FCST_THRESHs':[''],
-                                    'OBS_THRESHs':[''],
-                                    'CONFIDENCE_INTERVALS':'False',
-                                    'INTERP':'None',
-                                    'INTERP_PNTSs':[''],
-                                },
-                            }
-                        }
-                    },
-                },
-                'domain_group2, fhr_group2, init_group2, namnest, hireswfv3':{
-                    'spatial_map':{
-                        'DATE_TYPE':'VALID',
-                        'VALID_BEG':'',
-                        'VALID_END': (datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)).strftime('%Y%m%d'),
-                        'INIT_BEG':'',
-                        'INIT_END':'',
-                        'VX_MASK_LIST':'PuertoRico',
-                        'EVAL_PERIODS':['NA'],
-                        'VARIABLES':{
-                            'NA':{
-                                'APCP_24':{
-                                    'FCST_VALID_HOURS':['12'],
-                                    'FCST_INIT_HOURS':[''],
-                                    'STATSs':[''],
-                                    'FCST_LEADS':['54'],
-                                    'FCST_LEVEL':'A24',
-                                    'OBS_LEVEL':'A24',
-                                    'FCST_THRESHs':[''],
-                                    'OBS_THRESHs':[''],
-                                    'CONFIDENCE_INTERVALS':'False',
-                                    'INTERP':'None',
-                                    'INTERP_PNTSs':[''],
-                                },
-                            }
-                        }
-                    },
-                },
-                'domain_group3, fhr_group1, init_group1, namnest, hireswarw, hireswarwmem2, hireswfv3':{
-                    'spatial_map':{
-                        'DATE_TYPE':'VALID',
-                        'VALID_BEG':'',
-                        'VALID_END': (datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)).strftime('%Y%m%d'),
-                        'INIT_BEG':'',
-                        'INIT_END':'',
-                        'VX_MASK_LIST':'Hawaii',
-                        'EVAL_PERIODS':['NA'],
-                        'VARIABLES':{
-                            'NA':{
-                                'APCP_24':{
-                                    'FCST_VALID_HOURS':['12'],
-                                    'FCST_INIT_HOURS':[''],
-                                    'STATSs':[''],
-                                    'FCST_LEADS':['24','36','48'],
-                                    'FCST_LEVEL':'A24',
-                                    'OBS_LEVEL':'A24',
-                                    'FCST_THRESHs':[''],
-                                    'OBS_THRESHs':[''],
-                                    'CONFIDENCE_INTERVALS':'False',
-                                    'INTERP':'None',
-                                    'INTERP_PNTSs':[''],
-                                },
-                            }
-                        }
-                    },
-                },
-                'domain_group3, fhr_group2, init_group1, namnest, hireswfv3':{
-                    'spatial_map':{
-                        'DATE_TYPE':'VALID',
-                        'VALID_BEG':'',
-                        'VALID_END': (datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)).strftime('%Y%m%d'),
-                        'INIT_BEG':'',
-                        'INIT_END':'',
-                        'VX_MASK_LIST':'Hawaii',
-                        'EVAL_PERIODS':['NA'],
-                        'VARIABLES':{
-                            'NA':{
-                                'APCP_24':{
-                                    'FCST_VALID_HOURS':['12'],
-                                    'FCST_INIT_HOURS':[''],
-                                    'STATSs':[''],
-                                    'FCST_LEADS':['60'],
-                                    'FCST_LEVEL':'A24',
-                                    'OBS_LEVEL':'A24',
-                                    'FCST_THRESHs':[''],
-                                    'OBS_THRESHs':[''],
-                                    'CONFIDENCE_INTERVALS':'False',
-                                    'INTERP':'None',
-                                    'INTERP_PNTSs':[''],
-                                },
-                            }
-                        }
-                    },
-                },
-                'domain_group3, fhr_group1, init_group2, namnest':{
-                    'spatial_map':{
-                        'DATE_TYPE':'VALID',
-                        'VALID_BEG':'',
-                        'VALID_END': (datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)).strftime('%Y%m%d'),
-                        'INIT_BEG':'',
-                        'INIT_END':'',
-                        'VX_MASK_LIST':'Hawaii',
-                        'EVAL_PERIODS':['NA'],
-                        'VARIABLES':{
-                            'NA':{
-                                'APCP_24':{
-                                    'FCST_VALID_HOURS':['12'],
-                                    'FCST_INIT_HOURS':[''],
-                                    'STATSs':[''],
-                                    'FCST_LEADS':['30','42'],
-                                    'FCST_LEVEL':'A24',
-                                    'OBS_LEVEL':'A24',
-                                    'FCST_THRESHs':[''],
-                                    'OBS_THRESHs':[''],
-                                    'CONFIDENCE_INTERVALS':'False',
-                                    'INTERP':'None',
-                                    'INTERP_PNTSs':[''],
-                                },
-                            }
-                        }
-                    },
-                },
-                'domain_group3, fhr_group2, init_group2, namnest':{
-                    'spatial_map':{
-                        'DATE_TYPE':'VALID',
-                        'VALID_BEG':'',
-                        'VALID_END': (datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)).strftime('%Y%m%d'),
-                        'INIT_BEG':'',
-                        'INIT_END':'',
-                        'VX_MASK_LIST':'Hawaii',
-                        'EVAL_PERIODS':['NA'],
-                        'VARIABLES':{
-                            'NA':{
-                                'APCP_24':{
-                                    'FCST_VALID_HOURS':['12'],
-                                    'FCST_INIT_HOURS':[''],
-                                    'STATSs':[''],
-                                    'FCST_LEADS':['54'],
-                                    'FCST_LEVEL':'A24',
-                                    'OBS_LEVEL':'A24',
-                                    'FCST_THRESHs':[''],
-                                    'OBS_THRESHs':[''],
-                                    'CONFIDENCE_INTERVALS':'False',
-                                    'INTERP':'None',
-                                    'INTERP_PNTSs':[''],
-                                },
-                            }
-                        }
-                    },
-                }
             }
         },
     }

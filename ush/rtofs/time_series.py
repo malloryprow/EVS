@@ -573,6 +573,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
     else:
         handles = []
         labels = []
+    n_mods = 0    
     for m in range(len(mod_setting_dicts)):
         if model_list[m] in model_colors.model_alias:
             model_plot_name = (
@@ -610,10 +611,11 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             else:
                 y_vals_metric_min = np.nanmin(y_vals_metric1)
                 y_vals_metric_max = np.nanmax(y_vals_metric1)
-            if m == 0:
+            if n_mods == 0:
                 y_mod_min = y_vals_metric_min
                 y_mod_max = y_vals_metric_max
                 counts = pivot_counts[str(model_list[m])].values
+                n_mods+=1
             else:
                 y_mod_min = np.nanmin([y_mod_min, y_vals_metric_min])
                 y_mod_max = np.nanmax([y_mod_max, y_vals_metric_max])
@@ -753,18 +755,28 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         [np.power(10.,y), 2.*np.power(10.,y)] 
         for y in [-5,-4,-3,-2,-1,0,1,2,3,4,5]
     ]).flatten()
-    round_to_nearest_categories = y_range_categories/20.
     y_range = y_max-y_min
-    round_to_nearest =  round_to_nearest_categories[
-        np.digitize(y_range, y_range_categories[:-1])
-    ]
-    ylim_min = np.floor(y_min/round_to_nearest)*round_to_nearest
-    ylim_max = np.ceil(y_max/round_to_nearest)*round_to_nearest
+    if y_range < 1.0:
+        round_to_nearest = 0.5
+    else:
+        index = np.floor(y_range)
+        round_to_nearest = index / 2.0
+    margin = np.ceil(y_max) -np.floor(y_min)
+    ylim_min = (np.floor(y_min/round_to_nearest)*round_to_nearest) - 0.1 *margin
+    ylim_max = (np.ceil(y_max/round_to_nearest)*round_to_nearest) + 0.1 * margin
+
     if len(str(ylim_min)) > 5 and np.abs(ylim_min) < 1.:
         ylim_min = float(
             np.format_float_scientific(ylim_min, unique=False, precision=3)
         )
-    yticks = np.arange(ylim_min, ylim_max+round_to_nearest, round_to_nearest)
+        # Set y-axis limits from 0 to 1 for ACC plots
+    if str(metric1_name).upper() == 'ACC' or str(metric2_name).upper() == 'ACC':
+        ylim_min = -1
+        ylim_max = 1
+        yticks = np.arange(-1, 1.1, 0.1)
+    else:
+        yticks = np.arange(ylim_min, ylim_max+round_to_nearest, round_to_nearest)
+    
     var_long_name_key = df['FCST_VAR'].tolist()[0]
     if str(var_long_name_key).upper() == 'HGT':
         if str(df['OBS_VAR'].tolist()[0]).upper() == 'CEILING':
@@ -935,7 +947,8 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         else:
             title2 = f'{level_string}{var_long_name} (unitless), {domain_string}'
     title3 = (f'{str(date_type).capitalize()} {date_hours_string} '
-              + f'{date_start_string} to {date_end_string}, {frange_string}')
+              + f'{date_start_string} to {date_end_string}, {frange_string}, ' 
+              + f'Validation: {str(obtype).upper()} ')
     title_center = '\n'.join([title1, title2, title3])
     if sample_equalization:
         title_pad=20

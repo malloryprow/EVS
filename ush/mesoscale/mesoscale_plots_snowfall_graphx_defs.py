@@ -13,7 +13,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_06':{
@@ -58,7 +58,7 @@ graphics = {
                                     'CONFIDENCE_INTERVALS':'False',
                                     'DELETE_INTERMED_TOGGLE':'True',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1','81'],
                                 },
                                 'SNOD_06':{
                                     'FCST_VALID_HOURS':[''],
@@ -72,7 +72,7 @@ graphics = {
                                     'CONFIDENCE_INTERVALS':'False',
                                     'DELETE_INTERMED_TOGGLE':'True',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1','81'],
                                 },
                             },
                         }
@@ -84,7 +84,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_06':{
@@ -127,7 +127,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS_East',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_06':{
@@ -172,7 +172,7 @@ graphics = {
                                     'CONFIDENCE_INTERVALS':'False',
                                     'DELETE_INTERMED_TOGGLE':'True',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1','81'],
                                 },
                                 'SNOD_06':{
                                     'FCST_VALID_HOURS':[''],
@@ -186,7 +186,7 @@ graphics = {
                                     'CONFIDENCE_INTERVALS':'False',
                                     'DELETE_INTERMED_TOGGLE':'True',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1','81'],
                                 },
                             },
                         }
@@ -198,7 +198,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS_East',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_06':{
@@ -241,7 +241,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS_West',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_06':{
@@ -286,7 +286,7 @@ graphics = {
                                     'CONFIDENCE_INTERVALS':'False',
                                     'DELETE_INTERMED_TOGGLE':'True',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1','81'],
                                 },
                                 'SNOD_06':{
                                     'FCST_VALID_HOURS':[''],
@@ -300,7 +300,7 @@ graphics = {
                                     'CONFIDENCE_INTERVALS':'False',
                                     'DELETE_INTERMED_TOGGLE':'True',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1','81'],
                                 },
                             },
                         }
@@ -312,7 +312,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS_West',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_06':{
@@ -355,7 +355,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS_Central',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_06':{
@@ -400,7 +400,7 @@ graphics = {
                                     'CONFIDENCE_INTERVALS':'False',
                                     'DELETE_INTERMED_TOGGLE':'True',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1','81'],
                                 },
                                 'SNOD_06':{
                                     'FCST_VALID_HOURS':[''],
@@ -414,7 +414,7 @@ graphics = {
                                     'CONFIDENCE_INTERVALS':'False',
                                     'DELETE_INTERMED_TOGGLE':'True',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1','81'],
                                 },
                             },
                         }
@@ -426,7 +426,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS_Central',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_06':{
@@ -469,7 +469,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS_South',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_06':{
@@ -514,7 +514,7 @@ graphics = {
                                     'CONFIDENCE_INTERVALS':'False',
                                     'DELETE_INTERMED_TOGGLE':'True',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1','81'],
                                 },
                                 'SNOD_06':{
                                     'FCST_VALID_HOURS':[''],
@@ -528,7 +528,7 @@ graphics = {
                                     'CONFIDENCE_INTERVALS':'False',
                                     'DELETE_INTERMED_TOGGLE':'True',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1','81'],
                                 },
                             },
                         }
@@ -540,7 +540,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS_South',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_06':{
@@ -583,7 +583,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_24':{
@@ -628,7 +628,7 @@ graphics = {
                                     'CONFIDENCE_INTERVALS':'False',
                                     'DELETE_INTERMED_TOGGLE':'True',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1','81'],
                                 },
                                 'SNOD_24':{
                                     'FCST_VALID_HOURS':[''],
@@ -642,7 +642,7 @@ graphics = {
                                     'CONFIDENCE_INTERVALS':'False',
                                     'DELETE_INTERMED_TOGGLE':'True',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1','81'],
                                 },
                             },
                         }
@@ -654,7 +654,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_24':{
@@ -697,7 +697,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS_East',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_24':{
@@ -742,7 +742,7 @@ graphics = {
                                     'CONFIDENCE_INTERVALS':'False',
                                     'DELETE_INTERMED_TOGGLE':'True',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1','81'],
                                 },
                                 'SNOD_24':{
                                     'FCST_VALID_HOURS':[''],
@@ -756,7 +756,7 @@ graphics = {
                                     'CONFIDENCE_INTERVALS':'False',
                                     'DELETE_INTERMED_TOGGLE':'True',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1','81'],
                                 },
                             },
                         }
@@ -768,7 +768,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS_East',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_24':{
@@ -811,7 +811,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS_West',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_24':{
@@ -856,7 +856,7 @@ graphics = {
                                     'CONFIDENCE_INTERVALS':'False',
                                     'DELETE_INTERMED_TOGGLE':'True',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1','81'],
                                 },
                                 'SNOD_24':{
                                     'FCST_VALID_HOURS':[''],
@@ -870,7 +870,7 @@ graphics = {
                                     'CONFIDENCE_INTERVALS':'False',
                                     'DELETE_INTERMED_TOGGLE':'True',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1','81'],
                                 },
                             },
                         }
@@ -882,7 +882,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS_West',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_24':{
@@ -925,7 +925,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS_Central',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_24':{
@@ -970,7 +970,7 @@ graphics = {
                                     'CONFIDENCE_INTERVALS':'False',
                                     'DELETE_INTERMED_TOGGLE':'True',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1','81'],
                                 },
                                 'SNOD_24':{
                                     'FCST_VALID_HOURS':[''],
@@ -984,7 +984,7 @@ graphics = {
                                     'CONFIDENCE_INTERVALS':'False',
                                     'DELETE_INTERMED_TOGGLE':'True',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1','81'],
                                 },
                             },
                         }
@@ -996,7 +996,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS_Central',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_24':{
@@ -1039,7 +1039,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS_South',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_24':{
@@ -1084,7 +1084,7 @@ graphics = {
                                     'CONFIDENCE_INTERVALS':'False',
                                     'DELETE_INTERMED_TOGGLE':'True',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1','81'],
                                 },
                                 'SNOD_24':{
                                     'FCST_VALID_HOURS':[''],
@@ -1098,7 +1098,7 @@ graphics = {
                                     'CONFIDENCE_INTERVALS':'False',
                                     'DELETE_INTERMED_TOGGLE':'True',
                                     'INTERP':'NBRHD_SQUARE',
-                                    'INTERP_PNTSs':['1','25','81','441','961','3969'],
+                                    'INTERP_PNTSs':['1','81'],
                                 },
                             },
                         }
@@ -1110,7 +1110,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS_South',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'EVAL_PERIODS':[os.environ['EVAL_PERIOD']],
                         'VARIABLES':{
                             'ctc':{
                                 'WEASD_24':{

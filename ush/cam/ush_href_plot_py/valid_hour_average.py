@@ -30,6 +30,7 @@ from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 from datetime import datetime, timedelta as td
 
 SETTINGS_DIR = os.environ['USH_DIR']
+valid_src = os.environ['obsv']
 sys.path.insert(0, os.path.abspath(SETTINGS_DIR))
 from settings import Toggle, Templates, Paths, Presets, ModelSpecs, Reference
 from plotter import Plotter
@@ -451,7 +452,7 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
     if (metric2_name and (pivot_metric1.empty or pivot_metric2.empty)):
         print_varname = df['FCST_VAR'].tolist()[0]
         logger.warning(
-            f"Could not find (and cannot plot) {metric1_name} and/or"
+            f"Could not find {metric1_name} and/or"
             + f" {metric2_name} stats for {print_varname} at any level. "
             + f"This often happens when processed data are all NaNs, "
             + f" which are removed.  Check for seasonal cases where critical "
@@ -463,7 +464,7 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
     elif not metric2_name and pivot_metric1.empty:
         print_varname = df['FCST_VAR'].tolist()[0]
         logger.warning(
-            f"Could not find (and cannot plot) {metric1_name}"
+            f"Could not find {metric1_name}"
             f" stats for {print_varname} at any level. "
             + f"This often happens when processed data are all NaNs, "
             + f" which are removed.  Check for seasonal cases where critical "
@@ -659,6 +660,7 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
         connect_points = True
     else:
         connect_points = False
+    n_mods = 0
     for m in range(len(mod_setting_dicts)):
         if model_list[m] in model_colors.model_alias:
             model_plot_name = (
@@ -701,9 +703,10 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
                 else:
                     y_vals_metric_min = np.nanmin(y_vals_metric1)
                     y_vals_metric_max = np.nanmax(y_vals_metric1)
-            if m == 0:
+            if n_mods == 0:
                 y_mod_min = y_vals_metric_min
                 y_mod_max = y_vals_metric_max
+                n_mods+=1
             else:
                 if math.isinf(y_mod_min):
                     y_mod_min = y_vals_metric_min
@@ -1111,6 +1114,7 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
             title2 = f'{level_string}{var_long_name} ({units}), {domain_string}'
         else:
             title2 = f'{level_string}{var_long_name} (unitless), {domain_string}'
+    title2 += f'{valid_src}'
     title3 = (f'{str(date_type).capitalize()} {date_hours_string} '
               + f'{date_start_string} to {date_end_string}, {frange_string}')
     title_center = '\n'.join([title1, title2, title3])

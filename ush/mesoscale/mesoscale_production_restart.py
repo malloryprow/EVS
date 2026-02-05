@@ -30,25 +30,49 @@ VERIF_CASE = os.environ['VERIF_CASE']
 if STEP == 'stats':
     VERIF_CASE = os.environ['VERIF_CASE']
     RESTART_DIR = os.environ['RESTART_DIR']
+    njob = os.environ['njob']
+    job_type = os.environ['job_type']
+    COMPLETED_JOBS_FILE = os.environ['COMPLETED_JOBS_FILE']
     working_dir = os.path.join(DATA, VERIF_CASE)
-    completed_jobs_file = os.path.join(RESTART_DIR, 'completed_jobs.txt')
+    completed_jobs_file_full = COMPLETED_JOBS_FILE + "_" + job_type + "_job" + njob + ".txt"
+    completed_jobs_file = os.path.join(RESTART_DIR, 'completed_jobs', completed_jobs_file_full)
+    print("restart file",completed_jobs_file)
     if os.path.exists(RESTART_DIR):
         if (os.path.exists(completed_jobs_file) 
                 and os.stat(completed_jobs_file).st_size != 0):
             print(f"Copying restart directory {RESTART_DIR} "
                   +f"into working directory {working_dir}")
             cutil.run_shell_command(
-                ['cp', '-rpv', RESTART_DIR, working_dir]
+                 ['cp', '-rpv', RESTART_DIR, working_dir]
             )
 elif STEP == 'plots':
     COMOUTplots = os.environ['COMOUTplots']
     RESTART_DIR = os.environ['RESTART_DIR']
+    EVAL_PERIOD = os.environ['EVAL_PERIOD']
     SAVE_DIR = os.environ['SAVE_DIR']
-    completed_jobs_file = os.path.join(RESTART_DIR, f'completed_jobs.txt')
-    if os.path.exists(completed_jobs_file):
-        if os.stat(completed_jobs_file).st_size != 0:
+    njob = os.environ['njob']
+    COMPLETED_JOBS_FILE = os.environ['COMPLETED_JOBS_FILE']
+    working_dir = os.path.join(DATA, VERIF_CASE, 'out')
+    restart_full = os.path.join(RESTART_DIR, '*')
+    completed_jobs_file_full = COMPLETED_JOBS_FILE + "_job" + njob + ".txt"
+    if VERIF_CASE == "grid2obs":
+        completed_jobs_file = os.path.join(
+           RESTART_DIR, 'completed_jobs', completed_jobs_file_full)
+    elif VERIF_CASE == "precip":
+        completed_jobs_file = os.path.join(
+           RESTART_DIR, 'completed_jobs', completed_jobs_file_full)
+    elif VERIF_CASE == "snowfall":
+        completed_jobs_file = os.path.join(
+           RESTART_DIR, 'completed_jobs', completed_jobs_file_full)
+    else:
+           completed_jobs_file = os.path.join(RESTART_DIR, f'completed_jobs.txt')
+    if os.path.exists(RESTART_DIR):
+        if (os.path.exists(completed_jobs_file)
+               and os.stat(completed_jobs_file).st_size != 0):
+            print(f"Copying restart directory {RESTART_DIR} "
+                +f"into working directory {working_dir}")
             cutil.run_shell_command(
-                ['cp', '-rpv', os.path.join(RESTART_DIR,'*'), SAVE_DIR]
+                ['cp', '-rpv', restart_full, working_dir]
             )
 
 

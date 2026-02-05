@@ -430,13 +430,9 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                 models_sharing_colors = models_renamed[
                     np.array(temp_colors)==c
                 ]
-                if np.flatnonzero(np.core.defchararray.find(
-                        models_sharing_colors, 'model')!=-1):
-                    need_to_rename = models_sharing_colors[np.flatnonzero(
-                        np.core.defchararray.find(
-                            models_sharing_colors, 'model'
-                        )!=-1)[0]
-                    ]
+                arr= np.atleast_1d(models_sharing_colors).astype(str)
+                if np.any(np.char.find(arr, 'model') != -1):
+                    need_to_rename = arr[np.char.find(arr,'model') != -1]
                 else:
                     continue
                 models_renamed[models_renamed==need_to_rename] = (
@@ -524,17 +520,8 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         if confidence_intervals:
             reference_ci_lower2 = pivot_ci_lower2.mean(axis=1)
             reference_ci_upper2 = pivot_ci_upper2.mean(axis=1)
-        if not np.any((pivot_reference2.T/reference2).T == 1.):
-            logger.warning(
-                f"{str(metric2_name).upper()} is requested, but the value "
-                + f"varies from model to model. "
-                + f"Will plot an individual line for each model. If a "
-                + f"single reference line is preferred, set the "
-                + f"sample_equalization toggle in ush/settings.py to 'True', "
-                + f"and check in the log file if sample equalization "
-                + f"completed successfully."
-            )
-            plot_reference[1] = False
+        plot_reference[1] = True
+    
     if np.any(plot_reference):
         plotted_reference = [False, False]
         if confidence_intervals:
@@ -575,9 +562,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             ]
     else:
         handles = []
-        labels = [model_list[0].upper()]
-    handles = []
-    labels = []
+        labels = []
     n_mods = 0
     for m in range(len(mod_setting_dicts)):
         if model_list[m] in model_colors.model_alias:
@@ -963,7 +948,8 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
 #              + f'{date_start_string} to {date_end_string}, {frange_string}'
     fcst_day=int(flead[0]/24)
     title3 = (f'{str(date_type).lower()} {date_start_string} - {date_end_string}, '
-              + f'init: {date_hours_string} Forecast Day {fcst_day} (Hour {flead[0]})')
+              + f'init: {date_hours_string} Forecast Day {fcst_day} (Hour {flead[0]}), '
+              + f'Validation: {str(obtype).upper()} ')
     title_center = '\n'.join([title1, title2, title3])
     if sample_equalization:
         title_pad=40
@@ -1061,7 +1047,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
     if save_header:
         save_name = f'{save_header}_'+save_name
     save_subdir = os.path.join(
-        save_dir, f'{str(obtype).lower()}'
+        save_dir, 'images'
     )
     if not os.path.isdir(save_subdir):
         os.makedirs(save_subdir)

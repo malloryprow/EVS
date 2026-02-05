@@ -245,6 +245,12 @@ class PlotSpecs:
         var_plot_name_dict = {
             'APCP/A24': '24 hour Accumulated Precipitation',
             'APCP_A24/A24': '24 hour Accumulated Precipitation',
+            'APCP_WEEKLY/A168': 'Weekly Accumulated Precipitation',
+            'APCP_WEEKLY/A144': 'Week 5 Accumulated Precipitation',
+            'APCP_DAYS6_10/A120': ('Days 6-10 Accumulated '
+                                   +'Precipitation'),
+            'APCP_WEEKS3_4/A336': ('Weeks 3-4 Accumulated '
+                                   +'Precipitation'),
             'CAPE/P90-0': 'Mixed-Layer CAPE',
             'CAPE/Z0': 'Surface Based CAPE',
             'CFRZR/L0': 'Precipitation Type - Freezing Rain',
@@ -480,6 +486,34 @@ class PlotSpecs:
             var_plot_name = var_name_level
         return var_plot_name
 
+    def get_obs_plot_name(self, ob_name):
+        """! Get the full obs source name that will be
+             displayed on the plot
+
+             Args:
+                 ob_name - abbreviated obs source name (string)
+
+             Returns:
+                 obs_plot_name - full obs source name that
+                                 will be displayed on the plot
+                                 (string)
+        """
+        obs_plot_name_dict = {
+            'ecmwf': 'ECMWF Anl',
+            'gfs': 'GFS Anl',
+            'CCPA': 'CCPA',
+            'osi_saf': 'OSI-SAF',
+            'ghrsst_ospo': 'GHRSST-OSPO',
+            'ADPSFC': 'METARS'
+        }
+        if ob_name in list(obs_plot_name_dict.keys()):
+            obs_plot_name = obs_plot_name_dict[ob_name]
+        else:
+            self.logger.debug(f"{ob_name} not recognized, "
+                              +f"using {ob_name} on plot")
+            obs_plot_name = ob_name
+        return obs_plot_name
+
     def get_vx_mask_plot_name(self, vx_mask):
         """! Get the full verification masking information that will
              be displayed on the plot
@@ -542,7 +576,8 @@ class PlotSpecs:
 
     def get_dates_plot_name(self, date_type, start_date, end_date,
                             date_type_hr_list, other_hr_list, 
-                            forecast_hour_list, plot_type):
+                            forecast_hour_list, fcst_var_name,
+                            plot_type):
         """! Get the full date information that will be displayed on the plot
 
              Args:
@@ -559,6 +594,8 @@ class PlotSpecs:
                                       (strings)
                  forecast_hour_list - list of forecast hour(s),
                                       if not applicable is NA
+                 fcst_var_name      - forecast variable name
+                                      (string)
                  plot_type          - type of plot (string)
  
              Returns:
@@ -610,9 +647,36 @@ class PlotSpecs:
                 else:
                     forecast_day_list.append(str(forecast_day))
             if len(forecast_hour_list) == 1:
-                date_plot_name = (date_plot_name
-                                  +', Forecast Day '+forecast_day_list[0]+' '
-                                  +'(Hour '+forecast_hour_list[0]+')')
+                if 'DAYS6_10' in fcst_var_name:
+                    date_plot_name = (date_plot_name
+                                      +', Days 6-10 Forecast ')
+                elif 'WEEKLY' in fcst_var_name:
+                    if forecast_hour in ['168', '180']:
+                        date_plot_name = (date_plot_name
+                                          +', Week 1 Forecast ')
+                    if forecast_hour in ['336', '348']:
+                        date_plot_name = (date_plot_name
+                                          +', Week 2 Forecast ')
+                    if forecast_hour in ['504', '516']:
+                        date_plot_name = (date_plot_name
+                                          +', Week 3 Forecast ')
+                    if forecast_hour in ['672', '684']:
+                        date_plot_name = (date_plot_name
+                                          +', Week 4 Forecast ')
+                    if forecast_hour in ['828', '840']:
+                        date_plot_name = (date_plot_name
+                                          +', Week 5 Forecast ')
+                elif 'WEEKS3_4' in fcst_var_name:
+                    date_plot_name = (date_plot_name
+                                      +', Weeks 3-4 Forecast ')
+                elif 'MONTHLY' in fcst_var_name:
+                    date_plot_name = (date_plot_name
+                                      +', Month 1 Forecast ')
+                else:
+                    date_plot_name = (date_plot_name
+                                      +', Forecast Day '
+                                      +forecast_day_list[0]+' '
+                                      +'(Hour '+forecast_hour_list[0]+')')
             else:
                 date_plot_name = (date_plot_name
                                   +'\nForecast Days '
@@ -699,7 +763,9 @@ class PlotSpecs:
                                                             'SST_WEEKLYAVG',
                                                             'SST_MONTHLYAVG']:
             plot_title = plot_title+', '+var_thresh_for_title+' '+units
-            if plot_info_dict['fcst_var_name'] == 'APCP':
+            if plot_info_dict['fcst_var_name'] in ['APCP_WEEKLY',
+                                                   'APCP_DAYS6_10',
+                                                   'APCP_WEEKS3_4']:
                 thresh_value = float(plot_info_dict['fcst_var_thresh'][2:])
                 thresh_in = round(thresh_value*0.0393701, 3)
                 plot_title = plot_title+' ('+str(thresh_in)+' in)'
@@ -707,12 +773,16 @@ class PlotSpecs:
             plot_title = (plot_title+' '
                           +'Neighborhood Points: '
                           +plot_info_dict['interp_points'])
+        plot_title = (plot_title+' - '
+                      +'Validation: '
+                      +self.get_obs_plot_name(plot_info_dict['ob_name']))
         plot_title = (plot_title+'\n'
                       +self.get_dates_plot_name(date_info_dict['date_type'],
                                                 date_info_dict['start_date'], 
                                                 date_info_dict['end_date'],
                                                 date_type_hr_list,
                                                 other_hr_list, fhr_for_title,
+                                                plot_info_dict['fcst_var_name'],
                                                 self.plot_type))
         return plot_title
 
@@ -877,6 +947,19 @@ class PlotSpecs:
             +grid_savefig_name+'_'+region_savefig_name
             +'.png'
         )
+        if plot_info_dict['fcst_var_name'] in ['APCP_DAYS6_10',
+                                               'APCP_WEEKLY',
+                                               'APCP_WEEKS3_4']:
+            savefig_name = (
+                'evs.'
+                +component_savefig_name+'.'
+                +metric_savefig_name+'.'
+                +parameter_savefig_name+'.'
+                +ndays_savefig_name+'.'
+                +plot_type_savefig_name+'.'
+                +grid_savefig_name+'_'+region_savefig_name
+                +'.png'
+            )
         image_path = os.path.join(image_dir, savefig_name.lower())
         if plot_info_dict['fcst_var_name'] == 'CAPE':
             image_path = image_path.replace('_z0', '_l0').replace('_p90_0', '_l90')
