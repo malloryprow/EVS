@@ -104,7 +104,7 @@ def prune_data(data_dir, prune_dir, tmp_dir, output_base_template, valid_range,
       grep_cmd = (
          'grep -Fh '+fcst_var_filter+' '+met_stat_files_cmd+filter_cmd
       )
-
+      print(log_msg)
       with open(pruned_met_stat_file, 'w') as pmsf:
          pmsf.write(met_header_cols)
          pmsf.flush()
