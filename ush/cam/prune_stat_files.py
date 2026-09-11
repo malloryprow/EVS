@@ -97,9 +97,11 @@ def prune_data(data_dir, prune_dir, tmp_dir, output_base_template, valid_range,
           +' | grep -F '+shlex.quote(line_type)
           +' | grep -F '+shlex.quote(os.environ['INTERP'])
       )
-      log_msg = ("Pruning "+data_dir+" files for model "+model+", vx_mask "
-                 +vx_mask+", variable "+'/'.join(fcst_var_names)+", line_type "+line_type
-                 +", interp "+os.environ['INTERP'])
+      log_msg = (
+          "Pruning "+data_dir+" files for model "+model+", vx_mask "
+          +vx_mask+", variable "+'/'.join(fcst_var_names)
+          +", line_type "+line_type+", interp "+os.environ['INTERP']
+      )
       if any(interp_pnts):
          filter_cmd = (
              filter_cmd
