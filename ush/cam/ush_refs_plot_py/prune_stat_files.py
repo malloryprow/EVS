@@ -15,7 +15,7 @@ import os
 import re
 import sys
 import numpy as np
-import shelx
+import shlex
 from datetime import datetime, timedelta as td
 SETTINGS_DIR = os.environ['USH_DIR']
 sys.path.insert(0, os.path.abspath(SETTINGS_DIR))
